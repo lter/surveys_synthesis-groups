@@ -12,15 +12,11 @@
 # Load libraries
 librarian::shelf(tidyverse, scicomptools, qualtRics)
 
-# Make needed folder(s)
-dir.create(file.path("data"), showWarnings = F)
-dir.create(file.path("data", "raw"), showWarnings = F)
+# Make needed sub-folder(s)
+dir.create(file.path("data", "raw"), showWarnings = F, recursive = T)
 
 # Check for active Qualtrics API key
 scicomptools::token_check(api = "qualtrics", secret = TRUE)
-
-# Make needed sub-folder(s)
-dir.create(file.path("data", "raw"), showWarnings = F, recursive = T)
 
 # Clear environment
 rm(list = ls()); gc()

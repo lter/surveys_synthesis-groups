@@ -10,7 +10,7 @@
 ## ------------------------------------- ##
 
 # Load libraries
-librarian::shelf(tidyverse, scicomptools, qualtRics)
+librarian::shelf(tidyverse, scicomptools, qualtRics, googledrive)
 
 # Make needed folder(s)
 dir.create(file.path("data"), showWarnings = F)

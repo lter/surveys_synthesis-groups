@@ -13,7 +13,7 @@
 librarian::shelf(tidyverse, googledrive, ltertools)
 
 # Make needed sub-folder(s)
-dir.create(file.path("data", "tidy"), showWarnings = F, recursive = T)
+dir.create(file.path("data", "standardized"), showWarnings = F, recursive = T)
 
 # Clear environment
 rm(list = ls()); gc()
@@ -133,7 +133,7 @@ for(focal_type in unique(key_v1$survey_type)){
   
   # Export locally
   write.csv(type_df, na = '', row.names = F,
-            file = file.path("data", "tidy", type_name))
+            file = file.path("data", "standardized", type_name))
   
 } # Close loop
 

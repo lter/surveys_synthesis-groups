@@ -297,6 +297,8 @@ demo_v8 <- demo_v7 %>%
     # 2025
     synthesis_group %in% c("ResilienceandManagement", "CAGED") ~ "2025",
     T ~ synthesis_group), .before = synthesis_group) %>% 
+  # Fill missing progra info too
+  dplyr::mutate(program = "LTER") %>% 
   # Drop temp column
   dplyr::select(-start_year)
 
@@ -327,67 +329,50 @@ demo_v8b <- demo_v8 %>%
 # Is that a unique ID?
 length(unique(demo_v8b$person_id)) == nrow(demo_v8b)
 
-# To deduce the top ranking of unranked answers, we need a new dataframe
-unrank_df <- demo_v8b %>% 
-  # Grab only a unique row identifier and unranked version of the rank columns
-  dplyr::select(person_id, personal_thinking_style, group_project_approach, conflict_strategy) %>% 
-  # Pivot to long format
-  tidyr::pivot_longer(cols = -person_id, names_to = "names", values_to = "top_ranked") %>% 
-  # Remove rows where no value was supplied to the 'top ranked' column
-  dplyr::filter(!is.na(top_ranked) & nchar(top_ranked) != 0) %>% 
-  # Replace the full text with the comparable column name in the ranked answers
-  dplyr::mutate(top_ranked_fix = dplyr::case_when(
-    # Personal answers
-    top_ranked == "New ideas attract me more than existing solutions." ~ "rankPersonal_new_vs_existing_ideas",
-    top_ranked == "I study each problem until I understand the underlying logic." ~ "rankPersonal_underlying_logic",
-    top_ranked == "Developing a clear and detailed plan is very important to me." ~ "rankPersonal_detailed_plan_important",
-    top_ranked == "I like to extend boundaries." ~ "rankPersonal_push_boundaries",
-    top_ranked == "I appreciate collaboration as a way to bring new methods and knowledge to a challenge." ~ "rankPersonal_collaboration",
-    top_ranked == "I enjoy exploring and understanding the perspective and world view of others." ~ "rankPersonal_understand_others",
-    top_ranked == "I like to talk through my ideas as they come to me." ~ "rankPersonal_talk_through_ideas",
-    top_ranked == "I prefer to articulate my ideas in writing and on my own before sharing them with a group." ~ "rankPersonal_prefer_writing_alone",
-    top_ranked == "I always want to know what should be done when." ~ "rankPersonal_want_to_know_what_to_do",
-    top_ranked == "I make detailed analyses." ~ "rankPersonal_make_detailed_analyses",
-    # Group answers
-    top_ranked == "Getting the project organized and underway." ~ "rankGroup_project_organized",
-    top_ranked == "Understanding how the project can be of benefit to the group." ~ "rankGroup_group_benefit",
-    top_ranked == "Determining how we are to go about doing the project." ~ "rankGroup_making_plan",
-    top_ranked == "Discovering the goals and values of individuals in the group." ~ "rankGroup_id_individual_goals",
-    top_ranked == "Understanding the purpose and value of the project." ~ "rankGroup_id_project_value",
-    # Conflict answers
-    top_ranked == "Identifying and trying to clarify the conflict." ~ "rankConflict_clarify_conflict",
-    top_ranked == "Discussing the relationships between the ideas and your own experiences." ~ "rankConflict_connect_experiences",
-    top_ranked == "Discussing the ideals and values involved." ~ "rankConflict_discussing_ideals",
-    top_ranked == "Making sure all voices are heard, even those that are conflict-averse." ~ "rankConflict_allow_full_participation",
-    top_ranked == "Expressing arguments emphatically and concisely." ~ "rankConflict_emphatic_argument",
-  top_ranked == "Making the most logical and consistent arguments." ~ "rankConflict_logical_argument",
-  T ~ NA)) %>% 
-  # Drop unstandardized 'top ranking' column
-  dplyr::select(-top_ranked) %>% 
-  # Add "1" to all values (if it was identified here, it was their top choice for the category)
-  dplyr::mutate(ranking = 1) %>% 
-  # Make 'names' column entries specific to this dataframe
-  dplyr::mutate(names = paste0(names, "_2")) %>% 
-  # Reshape back to wide format
-  tidyr::pivot_wider(names_from = names, values_from = top_ranked_fix, values_fill = NA)
+# Add '1' to rank columns when the un-ranked option that corresponds to it is picked
+demo_v8c <- demo_v8b %>% 
+  # Create columns if they didn't previously exist in the 'rank___' columns
+  dplyr::mutate(rankPersonal_collaboration = NA,
+                rankPersonal_understand_others = NA,
+                rankPersonal_talk_through_ideas = NA,
+                rankPersonal_prefer_writing_alone = NA,
+                rankConflict_allow_full_participation = NA) %>% 
+  # Identify top-ranked answer by what they put in the corresponding 'what was your top ___?' column 
+  dplyr::mutate(
+    # Personal rankings
+    rankPersonal_new_vs_existing_ideas = ifelse(personal_thinking_style == "New ideas attract me more than existing solutions.", yes = 1, no = rankPersonal_new_vs_existing_ideas),
+    rankPersonal_underlying_logic = ifelse(personal_thinking_style == "I study each problem until I understand the underlying logic.", yes = 1, no = rankPersonal_underlying_logic),
+    rankPersonal_detailed_plan_important = ifelse(personal_thinking_style == "Developing a clear and detailed plan is very important to me.", yes = 1, no = rankPersonal_detailed_plan_important),
+    rankPersonal_push_boundaries = ifelse(personal_thinking_style == "I like to extend boundaries.", yes = 1, no = rankPersonal_push_boundaries),
+    rankPersonal_collaboration = ifelse(personal_thinking_style == "I appreciate collaboration as a way to bring new methods and knowledge to a challenge.", yes = 1, no = rankPersonal_collaboration),
+    rankPersonal_understand_others = ifelse(personal_thinking_style == "I enjoy exploring and understanding the perspective and world view of others.", yes = 1, no = rankPersonal_understand_others),
+    rankPersonal_talk_through_ideas = ifelse(personal_thinking_style == "I like to talk through my ideas as they come to me.", yes = 1, no = rankPersonal_talk_through_ideas),
+    rankPersonal_prefer_writing_alone = ifelse(personal_thinking_style == "I prefer to articulate my ideas in writing and on my own before sharing them with a group.", yes = 1, no = rankPersonal_prefer_writing_alone),
+    rankPersonal_want_to_know_what_to_do = ifelse(personal_thinking_style == "I always want to know what should be done when.", yes = 1, no = rankPersonal_want_to_know_what_to_do),
+    rankPersonal_make_detailed_analyses = ifelse(personal_thinking_style == "I make detailed analyses.", yes = 1, no = rankPersonal_make_detailed_analyses),
+    # Group rankings
+    rankGroup_project_organized = ifelse(group_project_approach == "Getting the project organized and underway.", yes = 1, no = rankGroup_project_organized),
+    rankGroup_group_benefit = ifelse(group_project_approach == "Understanding how the project can be of benefit to the group.", yes = 1, no = rankGroup_group_benefit),
+    rankGroup_making_plan = ifelse(group_project_approach == "Determining how we are to go about doing the project.", yes = 1, no = rankGroup_making_plan),
+    rankGroup_id_individual_goals = ifelse(group_project_approach == "Discovering the goals and values of individuals in the group.", yes = 1, no = rankGroup_id_individual_goals),
+    rankGroup_id_project_value = ifelse(group_project_approach == "Understanding the purpose and value of the project.", yes = 1, no = rankGroup_id_project_value),
+    # Conflict rankings
+    rankConflict_clarify_conflict = ifelse(conflict_strategy == "Identifying and trying to clarify the conflict.", yes = 1, no = rankConflict_clarify_conflict),
+    rankConflict_connect_experiences = ifelse(conflict_strategy == "Discussing the relationships between the ideas and your own experiences.", yes = 1, no = rankConflict_connect_experiences),
+    rankConflict_discussing_ideals = ifelse(conflict_strategy == "Discussing the ideals and values involved.", yes = 1, no = rankConflict_discussing_ideals),
+    rankConflict_allow_full_participation = ifelse(conflict_strategy == "Making sure all voices are heard, even those that are conflict-averse.", yes = 1, no = rankConflict_allow_full_participation),
+    rankConflict_emphatic_argument = ifelse(conflict_strategy == "Expressing arguments emphatically and concisely.", yes = 1, no = rankConflict_emphatic_argument),
+    rankConflict_logical_argument = ifelse(conflict_strategy == "Making the most logical and consistent arguments.", yes = 1, no = rankConflict_logical_argument) )
 
-# Does that yield no more than 3 responses per person? (1 / category of unranked response)
-unrank_df %>% 
-  dplyr::group_by(person_id) %>% 
-  dplyr::summarize(ct = dplyr::n()) %>% 
-  dplyr::filter(ct > 3)
+# Check whether that cut down on NAs
+supportR::count(demo_v8b$rankPersonal_new_vs_existing_ideas)
+supportR::count(demo_v8c$rankPersonal_new_vs_existing_ideas)
 
-# Any un-"fixed" responses?
-unrank_df %>% 
-  dplyr::filter(is.na(top_ranked_fix)) %>% 
-  dplyr::pull(top_ranked) %>% 
-  unique()
+# Check structure
+dplyr::glimpse(demo_v8c)
 
-# General structure check
-dplyr::glimpse(unrank_df)
-
-# To put the ranking system in the unranked columns, we need another new dataframe
-rank_df <- demo_v8b %>%
+# To put the ranking system in the unranked columns, we need a new dataframe
+rank_df <- demo_v8c %>%
   # Grab only a unique row identifier and the rank columns
   dplyr::select(person_id, dplyr::starts_with("rank")) %>%
   # Pivot to long format
@@ -430,33 +415,312 @@ rank_df <- demo_v8b %>%
 # Check structure
 dplyr::glimpse(rank_df)
 
+# With this in hand we can bring in the new columns
+demo_v9 <- demo_v8c %>%
+  dplyr::left_join(rank_df, by = "person_id") %>%
+  # Fill empty values in unranked option column with real NAs
+  dplyr::mutate(dplyr::across(.cols = c(personal_thinking_style, group_project_approach,
+                                        conflict_strategy),
+                              .fns = ~ ifelse(nchar(.) == 0, yes = NA, no = .))) %>% 
+  # And can coalesce the two versions of each ranked option question
+  dplyr::mutate(personal_thinking_style = coalesce(personal_thinking_style, rankPerso),
+                group_project_approach = coalesce(group_project_approach, rankGroup),
+                conflict_strategy = coalesce(conflict_strategy, rankConfl) ) %>%
+  # Reorder columns so 'like' columns are next to each other
+  dplyr::relocate(dplyr::starts_with('rankPersonal_'),
+                  personal_thinking_style,
+                  dplyr::starts_with('rankGroup_'),
+                  group_project_approach,
+                  dplyr::starts_with('rankConflict_'),
+                  conflict_strategy,
+                  .after = dplyr::starts_with("personality_")) %>% 
+  # Drop unwanted columns
+  dplyr::select(-row, -person_id, -rankGroup, -rankConfl, -rankPerso)
 
+# Check gained / lost columns
+supportR::diff_check(old = names(demo_v8c), new = names(demo_v9))
 
+# Did _that_ cut down on NAs?
+supportR::count(demo_v8c$personal_thinking_style)
+supportR::count(demo_v9$personal_thinking_style)
 
+# Check structure
+dplyr::glimpse(demo_v9)
 
+## ------------------------------------- ##
+# Wrangle Caregiving ----
+## ------------------------------------- ##
 
+# Streamline caregiving options
+demo_v10 <- demo_v9 %>%
+  dplyr::mutate(caregiving = dplyr::case_when(
+    # Contributor
+    caregiving %in% c("I am not a primary caregiver, but I contribute to the care of another person",
+                      "I contribute to the care of another person, but am not the primary caregiver"
+                      ) ~ "Contributor",
+    # Past
+    caregiving == "I am not currently responsible for caring for another person, and I have not been a primary caregiver in the past" ~ "Past caregiver",
+    # Primary
+    caregiving == "I am the primary caregiver for at least one person" ~ "Primary",
+    # Shares equally
+    caregiving %in% c("I share responsibility for care equally with another person",
+                      "I am not a primary caregiver, but I share responsibility for care equally with another person"
+                      ) ~ "Shares equally",
+    # Not
+    caregiving == "I am not currently responsible for caring for another person, but I have been a primary caregiver in the past" ~ "Not caregiver",
+    T ~ caregiving) )
 
+# Check categories
+supportR::count(demo_v9$caregiving)
+supportR::count(demo_v10$caregiving)
 
+# Check structure
+dplyr::glimpse(demo_v10)
 
+## ------------------------------------- ##
+# Discipline Wrangling ----
+## ------------------------------------- ##
 
+# Check discipline columns
+demo_v10 %>% 
+  dplyr::select(dplyr::contains("disc")) %>% 
+  dplyr::glimpse()
 
+# Do needed wrangling
+demo_v10b <- demo_v10 %>%
+  # Strip out key life science facets
+  dplyr::mutate(
+    tmp_life_ecoevo = ifelse(stringr::str_detect(life_sci_disc,
+                                                 paste0(c("Animal Sciences", "Biodiversity", 
+                                                          "Earth System Sciences",
+                                                          "Ecology", "Evolution",
+                                                          "Entomology", "Forest Sciences",
+                                                          "Marine Biology", "Physiology",
+                                                          "Plant Sciences", "Soil",
+                                                          "Systems Biology"),
+                                                        collapse = "|")),
+                             yes = "Ecology and Evolution", no = NA),
+    tmp_life_genetics = ifelse(stringr::str_detect(life_sci_disc,
+                                                   paste0(c("Biophysics", "Genetics", 
+                                                            "Genetics and Genomics",
+                                                            "Microbiology", "Nutrition", 
+                                                            "Pharmacology", "Structural Biology",
+                                                            "Toxicology and Environmental Health"), 
+                                                          collapse = "|")),
+                               yes = "Microbiology and Genetics", no = NA),
+    tmp_life_biochem = ifelse(stringr::str_detect(life_sci_disc,
+                                                  paste0(c("Biochemistry",
+                                                           "Biogeochemistry"), 
+                                                         collapse = "|")),
+                              yes = "Biochemistry", no = NA),
+    tmp_life_bioinf = ifelse(stringr::str_detect(life_sci_disc,
+                                                 paste0(c("Bioinformatics", "Modeling",
+                                                          "Mathematical", "Statistics"), 
+                                                        collapse = "|")),
+                             yes = "Bioinformatics", no = NA)) %>% 
+  # Recombine these new temporary columns
+  tidyr::unite(col = life_sci_disc2, dplyr::starts_with("tmp_life_"), 
+               sep = "; ", na.rm = T)
 
+# Check difference between old/new discipline columns
+demo_v10b %>% 
+  dplyr::select(life_sci_disc2, life_sci_disc) %>% 
+  dplyr::distinct() %>%
+  view()
 
+# Do the same wrangling for the next discipline
+demo_v10c <- demo_v10b %>% 
+  # Make needed temporary columns
+  dplyr::mutate(tmp_phys_chem = ifelse(stringr::str_detect(phys_sci_disc,
+                                                       paste0(c("Chemistry", "chemistry"), 
+                                                              collapse = "|")),
+                                   yes = "Chemistry", no = NA),
+                tmp_phys_env = ifelse(stringr::str_detect(phys_sci_disc,
+                                                       paste0(c("Atmospheric Sciences and Meteorology",
+                                                                "Environmental Sciences",
+                                                                "Oceanography"), 
+                                                              collapse = "|")),
+                                   yes = "Environmental Sci.", no = NA),
+                tmp_phys_earth = ifelse(stringr::str_detect(phys_sci_disc,
+                                                       paste0(c("Earth Sciences", "Geology"), 
+                                                              collapse = "|")),
+                                   yes = "Earth Sci.", no = NA)) %>% 
+  # Recombine these new temporary columns
+  tidyr::unite(col = phys_sci_disc2, dplyr::starts_with("tmp_phys_"), 
+               sep = "; ", na.rm = T)
 
+# Check difference between old/new discipline columns
+demo_v10c %>% 
+  dplyr::select(phys_sci_disc2, phys_sci_disc) %>% 
+  dplyr::distinct() %>%
+  view()
 
+# Do the same wrangling for the next discipline
+demo_v10d <- demo_v10c %>% 
+  # Make needed temporary columns
+  dplyr::mutate(tmp_inter_life = ifelse(stringr::str_detect(interdisc,
+                                                        paste0(c("Bioinformatics",
+                                                                 "Life Sciences"), 
+                                                               collapse = "|")),
+                                    yes = "Life Sci.", no = NA),
+                tmp_inter_phys = ifelse(stringr::str_detect(interdisc,
+                                                        paste0(c("Engineering",
+                                                                 "Physical Sciences"), 
+                                                               collapse = "|")),
+                                    yes = "Physical Sci.", no = NA),
+                tmp_inter_social = ifelse(stringr::str_detect(interdisc,
+                                                        paste0(c("Education", "Sociology"), 
+                                                               collapse = "|")),
+                                    yes = "Social Sci.", no = NA),
+                tmp_inter_math = ifelse(stringr::str_detect(interdisc,
+                                                        paste0(c("Computer Science",
+                                                                 "Math", "Statistics"), 
+                                                               collapse = "|")),
+                                    yes = "Math", no = NA)) %>% 
+  # Recombine these new temporary columns
+  tidyr::unite(col = interdisc2, dplyr::starts_with("tmp_inter_"), 
+               sep = "; ", na.rm = T)
 
+# Check difference between old/new discipline columns
+demo_v10d %>% 
+  dplyr::select(interdisc2, interdisc) %>% 
+  dplyr::distinct() %>%
+  view()
 
+# Do the same wrangling for the next discipline
+demo_v10e <- demo_v10d %>% 
+  # Make needed temporary columns
+  dplyr::mutate(tmp_prim_inter = ifelse(stringr::str_detect(primary_disc,
+                                                            paste0(c("Interdisciplinary",
+                                                                     "no primary"), 
+                                                                   collapse = "|")),
+                                        yes = "Interdisciplinary", no = NA),
+                tmp_prim_life = ifelse(stringr::str_detect(primary_disc,
+                                                           paste0(c("Biology", "Bioinformatics",
+                                                                    "Ecology", "Environmental",
+                                                                    "Evolution", "fisheries", 
+                                                                    "Life Sciences"), 
+                                                                  collapse = "|")),
+                                       yes = "Life Sci.", no = NA),
+                tmp_prim_phys = ifelse(stringr::str_detect(primary_disc,
+                                                           paste0(c("Earth Sciences", "Engineering",
+                                                                    "Geochemistry", "Geology",
+                                                                    "Physical Sciences", 
+                                                                    "Soil Science"), 
+                                                                  collapse = "|")),
+                                       yes = "Physical Sci.", no = NA),
+                tmp_prim_soc = ifelse(stringr::str_detect(primary_disc,
+                                                          paste0(c("Behavioral", "Education", 
+                                                                   "governance", "policy",
+                                                                   "Social", "Sociology"), 
+                                                                 collapse = "|")),
+                                      yes = "Social Sci.", no = NA),
+                tmp_prim_math = ifelse(stringr::str_detect(primary_disc,
+                                                           paste0(c("Computer Science",
+                                                                    " informatics",
+                                                                    "Mathematics",
+                                                                    "Statistics"), 
+                                                                  collapse = "|")),
+                                       yes = "Math", no = NA)) %>% 
+  # Recombine these new temporary columns
+  tidyr::unite(col = primary_disc2, dplyr::starts_with("tmp_prim_"), 
+               sep = "; ", na.rm = T)
+
+# Check difference between old/new discipline columns
+demo_v10e %>% 
+  dplyr::select(primary_disc2, primary_disc) %>% 
+  dplyr::distinct() %>%
+  view()
+
+# Do the same wrangling for the next discipline
+demo_v10f <- demo_v10e %>% 
+  # Make needed temporary columns
+  dplyr::mutate(tmp_sec_inter = ifelse(stringr::str_detect(secondary_disc,
+                                                            paste0(c("Interdisciplinary",
+                                                                     "no secondary"), 
+                                                                   collapse = "|")),
+                                        yes = "Interdisciplinary", no = NA),
+                tmp_sec_life = ifelse(stringr::str_detect(secondary_disc,
+                                                           paste0(c("Biology", "Bioinformatics",
+                                                                    "Ecology", "Environmental",
+                                                                    "Evolution", "fisheries", 
+                                                                    "Life Sciences"), 
+                                                                  collapse = "|")),
+                                       yes = "Life Sci.", no = NA),
+                tmp_sec_phys = ifelse(stringr::str_detect(secondary_disc,
+                                                           paste0(c("Earth Sciences", "Engineering",
+                                                                    "Geochemistry", "Geology",
+                                                                    "Physical Sciences", 
+                                                                    "Soil Science"), 
+                                                                  collapse = "|")),
+                                       yes = "Physical Sci.", no = NA),
+                tmp_sec_soc = ifelse(stringr::str_detect(secondary_disc,
+                                                          paste0(c("Behavioral", "Education", 
+                                                                   "governance", "policy",
+                                                                   "Social", "Sociology"), 
+                                                                 collapse = "|")),
+                                      yes = "Social Sci.", no = NA),
+                tmp_sec_math = ifelse(stringr::str_detect(secondary_disc,
+                                                           paste0(c("Computer Science",
+                                                                    " informatics",
+                                                                    "Mathematics",
+                                                                    "Statistics"), 
+                                                                  collapse = "|")),
+                                       yes = "Math", no = NA)) %>% 
+  # Recombine these new temporary columns
+  tidyr::unite(col = secondary_disc2, dplyr::starts_with("tmp_sec_"), 
+               sep = "; ", na.rm = T)
+
+# Check difference between old/new discipline columns
+demo_v10f %>% 
+  dplyr::select(secondary_disc2, secondary_disc) %>% 
+  dplyr::distinct() %>%
+  view()
+
+# Do the same wrangling for the next discipline
+demo_v10g <- demo_v10f %>% 
+  # Make needed temporary columns
+  dplyr::mutate(academic_disc2 = dplyr::case_when(
+    academic_disc %in% c("Biological Sciences") ~ "Life Sci.",
+    academic_disc %in% c("Engineering", "Physical Sciences") ~ "Physical Sci.",
+    academic_disc %in% c("Other fields or professions") ~ "Other Fields",
+    T ~ academic_disc))
+
+# Check difference between old/new discipline columns
+demo_v10g %>% 
+  dplyr::select(academic_disc2, academic_disc) %>% 
+  dplyr::distinct() %>%
+  view()
+
+# Make final (discipline) object
+demo_v11 <- demo_v10g %>% 
+  # Drop temporary columns
+  dplyr::select(-dplyr::starts_with("tmp_")) %>% 
+  # Replace old columns with new ones
+  dplyr::select(-dplyr::ends_with("disc")) %>% 
+  dplyr::rename_with(.cols = dplyr::ends_with("disc2"),
+                     .fn = ~ gsub("disc2", "disc", x = .))
+
+# Check gained / lost columns
+supportR::diff_check(old = names(demo_v10), new = names(demo_v11))
+
+# Check out tidy columns
+demo_v11 %>% 
+  dplyr::select(dplyr::ends_with("disc")) %>% 
+  dplyr::distinct()
+
+# General structure check
+dplyr::glimpse(demo_v11)
 
 ## ------------------------------------- ##
 # Export ----
 ## ------------------------------------- ##
 
 # Save a final object
-demo_v99 <- demo_v1
+demo_v99 <- demo_v11
 
 # Export locally
 write.csv(demo_v99, row.names = F, na = '',
           file = file.path("data", "tidy", "wg-survey-tidy_demographic.csv"))
 
 # End ----
-

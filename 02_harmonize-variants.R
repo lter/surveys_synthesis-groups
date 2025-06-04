@@ -66,8 +66,15 @@ for(focal_survey in unique(key_v2$source)){
   focal_v1 <- ltertools::standardize(focal_file = focal_survey, key = key_v2, 
                                      df_list = list_orig)
   
-  # Add some useful columns
+  # Do some post-standardization wrangling
   focal_v2 <- focal_v1 %>% 
+    # Replace empty cells with true NAs
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(),
+                                .fns = ~ ifelse(nchar(.) == 0, yes = NA, no = .))) %>% 
+    # And remove any columns that are completely NA
+    ## Such columns are sometimes introduced by Qualtrics' way of storing data
+    dplyr::select(-dplyr::where(fn = ~ all(is.na(.)))) %>% 
+    # Clearly identify the veriant of the current survey
     dplyr::mutate(survey_iteration = ifelse(stringr::str_sub(focal_survey, 1, 4) == "LTER",
                                             yes = "2016-19 variant",
                                             no = "2020-present variant"),

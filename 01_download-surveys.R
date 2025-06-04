@@ -47,9 +47,7 @@ for(focal_survey in unique(survey_ids$name)){
     # Remove identifying information here
     dplyr::select(-dplyr::starts_with(c("IPAddress", "ResponseId", "Recipient"))) %>% 
     # Remove 'display order' questions too
-    dplyr::select(-dplyr::contains("_DO_")) %>% 
-    # And remove any columns without any data
-    dplyr::select(-dplyr::where(fn = ~ all(is.na(.))))
+    dplyr::select(-dplyr::contains("_DO_"))
 
   # Generate a better file name for this locally
   focal_out_v1 <- gsub(pattern = "#|-", replacement = "", x = focal_survey)

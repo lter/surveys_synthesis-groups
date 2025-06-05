@@ -168,7 +168,7 @@ supportR::count(early_v4$satisfaction_so_far)
 dplyr::glimpse(early_v4)
 
 ## ------------------------------------- ##
-# Reorder / Streamline Columns
+# Reorder / Streamline Columns ----
 ## ------------------------------------- ##
 
 # Reorder the columns sensibly

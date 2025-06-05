@@ -313,7 +313,7 @@ supportR::count(end_v4$expectations_evolve)
 dplyr::glimpse(end_v4)
 
 ## ------------------------------------- ##
-# Reorder / Streamline Columns
+# Reorder / Streamline Columns ----
 ## ------------------------------------- ##
 
 # Reorder the columns sensibly

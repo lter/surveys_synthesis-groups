@@ -167,7 +167,7 @@ supportR::count(mid_v4$satisfaction_rating)
 dplyr::glimpse(mid_v4)
 
 ## ------------------------------------- ##
-# Reorder / Streamline Columns
+# Reorder / Streamline Columns ----
 ## ------------------------------------- ##
 
 # Reorder the columns sensibly

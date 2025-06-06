@@ -78,9 +78,10 @@ early_v3 <- early_v2 %>%
     synthesis_group %in% c("Synchrony", "Biodiversity Productivity", "SOM") ~ "2017",
     # 2020
     synthesis_group %in% c("River Si Exports", "EMERGENT", "Drought Effects") ~ "2020",
+    # 2021
+    synthesis_group %in% c("Ecosystem Transitions", "Plant Reproduction") ~ "2021",
     # 2023
-    synthesis_group %in% c("Ecosystem Transitions", "Plant Reproduction",
-                           "Fire and Aridlands", "Marine Consumer Nutrient Dynamics",
+    synthesis_group %in% c("Fire and Aridlands", "Marine Consumer Nutrient Dynamics",
                            "Producers-Consumers-Disturbance", "Selection Across Scales",
                            "Soil P Controls on C and N", "Pelagic Community Structure",
                            "Flux-Gradient") ~ "2023",

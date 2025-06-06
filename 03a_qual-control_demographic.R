@@ -286,9 +286,10 @@ demo_v8 <- demo_v7 %>%
     synthesis_group %in% c("Synchrony", "Biodiversity Productivity", "SOM") ~ "2017",
     # 2020
     synthesis_group %in% c("River Si Exports", "EMERGENT", "Drought Effects") ~ "2020",
+    # 2021
+    synthesis_group %in% c("Ecosystem Transitions", "Plant Reproduction") ~ "2021",
     # 2023
-    synthesis_group %in% c("Ecosystem Transitions", "Plant Reproduction",
-                           "Fire and Aridlands", "Marine Consumer Nutrient Dynamics",
+    synthesis_group %in% c("Fire and Aridlands", "Marine Consumer Nutrient Dynamics",
                            "Producers-Consumers-Disturbance", "Selection Across Scales",
                            "Soil P Controls on C and N", "Pelagic Community Structure",
                            "Flux-Gradient") ~ "2023",
@@ -523,8 +524,7 @@ demo_v10b <- demo_v10 %>%
 # Check difference between old/new discipline columns
 demo_v10b %>% 
   dplyr::select(life_sci_disc2, life_sci_disc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Do the same wrangling for the next discipline
 demo_v10c <- demo_v10b %>% 
@@ -550,8 +550,7 @@ demo_v10c <- demo_v10b %>%
 # Check difference between old/new discipline columns
 demo_v10c %>% 
   dplyr::select(phys_sci_disc2, phys_sci_disc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Do the same wrangling for the next discipline
 demo_v10d <- demo_v10c %>% 
@@ -582,8 +581,7 @@ demo_v10d <- demo_v10c %>%
 # Check difference between old/new discipline columns
 demo_v10d %>% 
   dplyr::select(interdisc2, interdisc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Do the same wrangling for the next discipline
 demo_v10e <- demo_v10d %>% 
@@ -627,8 +625,7 @@ demo_v10e <- demo_v10d %>%
 # Check difference between old/new discipline columns
 demo_v10e %>% 
   dplyr::select(primary_disc2, primary_disc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Do the same wrangling for the next discipline
 demo_v10f <- demo_v10e %>% 
@@ -672,8 +669,7 @@ demo_v10f <- demo_v10e %>%
 # Check difference between old/new discipline columns
 demo_v10f %>% 
   dplyr::select(secondary_disc2, secondary_disc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Do the same wrangling for the next discipline
 demo_v10g <- demo_v10f %>% 
@@ -687,8 +683,7 @@ demo_v10g <- demo_v10f %>%
 # Check difference between old/new discipline columns
 demo_v10g %>% 
   dplyr::select(academic_disc2, academic_disc) %>% 
-  dplyr::distinct() %>%
-  view()
+  dplyr::distinct()
 
 # Make final (discipline) object
 demo_v11 <- demo_v10g %>% 

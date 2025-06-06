@@ -97,7 +97,59 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
 
+## ------------------------------------- ##
+# Race ----
+## ------------------------------------- ##
 
+# Identify max number of semicolons in 'race' column & add 1
+semi_ct <- max(stringr::str_count(string = demo$race, pattern = ";"), na.rm = T) + 1
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  # Filter out non-responses (i.e., NAs)
+  dplyr::filter(!is.na(race) & nchar(race) != 0) %>% 
+  # Pare down to desired columns
+  dplyr::select(cohort, race) %>% 
+  # Separate race entries by semicolon
+  tidyr::separate_wider_delim(cols = race, delim = "; ", too_few = "align_start",
+                              names = paste0("race_temp", 1:semi_ct)) %>% 
+  # Remove some placeholder info
+  dplyr::mutate(dplyr::across(.cols = dplyr::starts_with("race_temp"),
+                              .fns = ~ ifelse(stringr::str_detect(string = ., pattern = "other racial"),
+                                              yes = gsub("other racial or ethnic group\\(s\\)\\: ",
+                                                         "", tolower(.)),
+                                              no = .))) %>% 
+  # Pivot longer
+  tidyr::pivot_longer(cols = dplyr::starts_with("race_temp"), 
+                      names_to = "junk", values_to = "race") %>%
+  # Remove NAs that introduces
+  dplyr::filter(!is.na(race) & nchar(race) != 0) %>% 
+  # Prepare for graph creation
+  survey_prep(df = ., resp = "race", grp = "cohort")
+  
+
+str(demo_sub)
+
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(race, count), fill = cohort)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("#662506", "#993404", "#cc4c02", 
+                               "#ec7014", "#fe9929", "#fec44f")) +
+  lno_theme +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.7, 0.2),
+        axis.text.y = element_text(size = 10),
+        axis.title = element_blank())
+
+# Generate nice file name
+(plotname <- paste0(filestem, "race", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "semi_ct")); gc()
 
 
 

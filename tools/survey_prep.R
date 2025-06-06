@@ -2,70 +2,70 @@
 #' 
 #' @description Virtually all report graphs use participants per cohort or % responses per cohort. This function does that summarization quickly and (more or less) easily.
 #' 
-#' @param data (data.frame-like) Full survey data
-#' @param response (character) Column name in 'data' corresponding to the question for which summarization is desired
-#' @param group (character) One of either "group" or "cohort" for the desired level of summarization
+#' @param df (data.frame-like) Full survey data
+#' @param resp (character) Single column name in 'df' corresponding to the question for which summarization is desired
+#' @param grp (character) One of either "global" or "cohort" for the desired level of summarization
 #'
 #' @return (data.frame) Summarized dataframe of responses within the specified grouping structure
 #' 
-survey_prep <- function(data = NULL, response = NULL, group = "cohort"){
+survey_prep <- function(df = NULL, resp = NULL, grp = "cohort"){
   
-  # Error out if anything isn't provided
-  if(is.null(data) == TRUE | is.null(group) == TRUE | is.null(response) == TRUE)
-    stop("All arguments must be specified")
+  # Errors for 'df'
+  if(is.null(df) || "data.frame" %in% class(df) != TRUE)
+    stop("'df' must be provided and be data.frame-like")
   
-  # Error out if groups or response are not characters
-  if(is.character(response) != TRUE | is.character(group) != TRUE)
-    stop("Response variable (column name) & grouping level must be supplied a characters")
+  # Errors for 'resp'
+  if(is.null(resp) || is.character(resp) != TRUE || length(resp) != 1 || !resp %in% names(df))
+    stop("'resp' must be a single column name found in 'df'")
   
-  # Error out for unsupported group argument specification
-  if(!group %in% c("cohort", "global"))
-    stop("`group` must be one of: 'cohort', 'global'")
+  # Errors for 'grp'
+  if(is.null(grp) || is.character(grp) != TRUE || length(grp) != 1 || !grp %in% c("global", "cohort"))
+    stop("'grp' must be one of either 'global' or 'cohort'")
   
-  # Process global summary
-  if(group == "global"){
+  # Do prep that applies regardless of 'grp' choice
+  df_v2 <- df %>% 
+    dplyr::filter(!is.na(!!rlang::ensym(resp)) & 
+                    nchar(!!rlang::ensym(resp)) != 0)
+  
+  # Then handle other stuff conditionally
+  if(grp == "global"){
     
-    # Wrangle data
-    prepped_df <- data %>% 
-      # Keep only response / group columns
-      dplyr::select(dplyr::all_of(c(response))) %>% 
-      # Filter out missing information for the given response variable
-      dplyr::filter(!is.na(!!rlang::ensym(response)) & 
-                      nchar(!!rlang::ensym(response)) != 0) %>% 
-      # Calculate total participants
+    # Do it    
+    df_v3 <- df_v2 %>% 
+      # Grab relevant column(s)
+      dplyr::select(dplyr::all_of(c(resp))) %>% 
+      # Calculate total respondents
       dplyr::mutate(total_particip = dplyr::n()) %>% 
-      # Calculate percent response category overall
-      dplyr::group_by(!!rlang::ensym(response)) %>% 
+      # Calculate responses per response category
+      dplyr::group_by(!!rlang::ensym(resp)) %>% 
       dplyr::summarize(total_particip = dplyr::first(total_particip),
                        count = dplyr::n()) %>%
-      dplyr::mutate(perc_resp = (count / total_particip) * 100) %>% 
-      # Return as dataframe
-      as.data.frame()
+      dplyr::ungroup() %>% 
+      # And calculate percent of responses per that category
+      dplyr::mutate(perc_resp = (count / total_particip) * 100)
     
-  } # Close global conditional
-  
-  # Process cohort-level summary
-  if(group == "cohort"){
+  } else if(grp == "cohort"){
     
-    # Process data
-    prepped_df <- data %>% 
-      # Keep only response / group columns
-      dplyr::select(dplyr::all_of(c(response, "cohort"))) %>% 
-      # Filter out missing information for the given response variable
-      dplyr::filter(!is.na(!!rlang::ensym(response)) & 
-                      nchar(!!rlang::ensym(response)) != 0) %>% 
-      # Calculate total participants / cohort
+    # Do it    
+    df_v3 <- df_v2 %>% 
+      # Grab relevant column(s)
+      dplyr::select(dplyr::all_of(c("cohort", resp))) %>% 
+      # Calculate total respondents (per cohort)
       dplyr::group_by(cohort) %>% 
       dplyr::mutate(total_particip = dplyr::n()) %>% 
-      # Calculate percent response category within cohort
-      dplyr::group_by(cohort, !!rlang::ensym(response)) %>% 
+      dplyr::ungroup() %>% 
+      # Calculate responses per response category
+      dplyr::group_by(cohort, !!rlang::ensym(resp)) %>% 
       dplyr::summarize(total_particip = dplyr::first(total_particip),
-                       count = dplyr::n()) %>%
-      dplyr::mutate(perc_resp = (count / total_particip) * 100) %>% 
-      # Return as dataframe
-      as.data.frame()
+                       count = dplyr::n(),
+                       .groups = "keep") %>%
+      dplyr::ungroup() %>% 
+      # And calculate percent of responses per that category
+      dplyr::mutate(perc_resp = (count / total_particip) * 100)
     
-  } # Close cohort conditional
+  }
   
-  # Return finished product
-  return(prepped_df) }
+  # Return 'prepared' data
+  return(df_v3) }
+
+# End ----

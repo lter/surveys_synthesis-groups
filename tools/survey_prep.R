@@ -1,8 +1,14 @@
-## Virtually all report graphs are of participants / cohort or % responses / cohort
-## `survey_prep` quickly/easily generates the desired summarization for a specified response variable
-
-# Plotting prep function
-survey_prep <- function(response = NULL, data = NULL, group = "cohort"){
+#' @title Summarize Survey Data for a Specific Question
+#' 
+#' @description Virtually all report graphs use participants per cohort or % responses per cohort. This function does that summarization quickly and (more or less) easily.
+#' 
+#' @param data (data.frame-like) Full survey data
+#' @param response (character) Column name in 'data' corresponding to the question for which summarization is desired
+#' @param group (character) One of either "group" or "cohort" for the desired level of summarization
+#'
+#' @return (data.frame) Summarized dataframe of responses within the specified grouping structure
+#' 
+survey_prep <- function(data = NULL, response = NULL, group = "cohort"){
   
   # Error out if anything isn't provided
   if(is.null(data) == TRUE | is.null(group) == TRUE | is.null(response) == TRUE)

@@ -131,7 +131,7 @@ demo_sub <- demo %>%
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(race, count), fill = cohort)) +
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(race, cat_total), fill = cohort)) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +
   scale_fill_manual(values = c("#662506", "#993404", "#cc4c02", 
@@ -382,7 +382,7 @@ demo_sub <- survey_prep(df = demo, resp = "personal_thinking_style", grp = "coho
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(personal_thinking_style, count), 
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(personal_thinking_style, cat_total), 
                                fill = rev(cohort))) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +
@@ -416,7 +416,7 @@ demo_sub <- survey_prep(df = demo, resp = "group_project_approach", grp = "cohor
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(group_project_approach, count), 
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(group_project_approach, cat_total), 
                                fill = rev(cohort))) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +
@@ -450,7 +450,7 @@ demo_sub <- survey_prep(df = demo, resp = "conflict_strategy", grp = "cohort") %
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(conflict_strategy, count), 
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(conflict_strategy, cat_total), 
                                fill = rev(cohort))) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +
@@ -511,7 +511,7 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
 
 ## ------------------------------------- ##
-# Job Sector ----
+# Highest Level of Education (Self) ----
 ## ------------------------------------- ##
 
 # Define desired category order and colors
@@ -578,7 +578,7 @@ demo_sub <- demo %>%
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(question, count), 
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(question, cat_total), 
                                fill = rev(cohort))) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +

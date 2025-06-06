@@ -160,7 +160,8 @@ demo_v6 <- demo_v5 %>%
       professional_role == "analyst/data scientist/programmer" ~ "data professional", 
       professional_role == "other: data manager" ~ "data professional", 
       professional_role == "researcher" ~ "researcher/scientific expert", 
-      professional_role == "other: educator and researcher" ~ "other: researcher and educator", 
+      professional_role == "other: educator and researcher" ~ "other: researcher and educator",
+      professional_role == "other:" ~ "other",
       T ~ as.character(professional_role)),
     # Primary discipline
     primary_disc = dplyr::case_when(

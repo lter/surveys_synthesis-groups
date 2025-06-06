@@ -48,7 +48,8 @@ demo_sub <- survey_prep(df = demo, resp = "gender", grp = "cohort") %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "gender", colors = sub_cols, 
-                hline_int = 50, hline_col = "#000")
+                hline_int = 50, hline_col = "#000", 
+                total_y = 90, total_col = "#fff")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "gender", ".png"))
@@ -76,7 +77,8 @@ demo_sub <- survey_prep(df = demo, resp = "sexuality", grp = "cohort") %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "sexuality", colors = sub_cols, 
-                hline_int = 25, hline_col = "#000") +
+                hline_int = 25, hline_col = "#000",
+                total_y = 90, total_col = "#fff") +
   guides(fill = guide_legend(nrow = 2))
 
 # Generate nice file name
@@ -149,7 +151,8 @@ demo_sub <- survey_prep(df = demo, resp = "latinx", grp = "cohort") %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "latinx", colors = sub_cols, 
-                hline_int = 25, hline_col = "#000")
+                hline_int = 25, hline_col = "#000", 
+                total_y = 90, total_col = "#fff")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "latinx", ".png"))
@@ -178,7 +181,8 @@ demo_sub <- demo %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "disability", colors = sub_cols, 
-                hline_int = 25, hline_col = "gray80")
+                hline_int = 25, hline_col = "gray80", 
+                total_y = 90, total_col = "#fff")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "disability", ".png"))
@@ -208,7 +212,8 @@ demo_sub <- survey_prep(df = demo, resp = "caregiving", grp = "cohort") %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "caregiving", colors = sub_cols, 
-                hline_int = c(25, 75), hline_col = "#000")
+                hline_int = c(25, 75), hline_col = "#000", 
+                total_y = 60, total_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "caregiving", ".png"))
@@ -240,7 +245,8 @@ demo_sub <- demo %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "first_gen", colors = sub_cols, 
-                hline_int = 25, hline_col = "gray80")
+                hline_int = 25, hline_col = "gray80", 
+                total_y = 90, total_col = "#fff")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "first-gen", ".png"))
@@ -268,7 +274,8 @@ demo_sub <- survey_prep(df = demo, resp = "career_stage", grp = "cohort") %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "career_stage", colors = sub_cols, 
-                hline_int = c(25, 75), hline_col = "#000")
+                hline_int = c(25, 75), hline_col = "#000", 
+                total_y = 88, total_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "career-stage", ".png"))
@@ -304,7 +311,8 @@ demo_sub <- demo %>%
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "professional_role", colors = sub_cols, 
-                hline_int = 25, hline_col = "gray80") +
+                hline_int = 25, hline_col = "gray80", 
+                total_y = 90, total_col = "#fff") +
   theme(legend.position = "right")
 
 # Generate nice file name
@@ -412,11 +420,14 @@ demo_sub <- demo %>%
     job_sector == "State, local or federal government" ~ "Government",
     T ~ job_sector)) %>% 
   survey_prep(df = ., resp = "job_sector", grp = "cohort") %>% 
-  dplyr::mutate(job_sector = factor(job_sector, levels = names(sub_cols)))
+  dplyr::mutate(job_sector = factor(job_sector, levels = names(sub_cols))) %>% 
+  # Tweak cohort levels
+  dplyr::mutate(cohort = factor(cohort, levels = sort(unique(cohort))))
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "job_sector", colors = sub_cols, 
-                hline_int = 25, hline_col = "gray80")
+                hline_int = 25, hline_col = "gray80", 
+                total_y = 90, total_col = "#fff")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "job-sector", ".png"))
@@ -443,11 +454,13 @@ demo_sub <- demo %>%
     self_educ == "doctoral degree (PhD)" ~ "doctoral degree",
     T ~ self_educ)) %>% 
   survey_prep(df = ., resp = "self_educ", grp = "cohort") %>% 
-  dplyr::mutate(self_educ = factor(self_educ, levels = names(sub_cols)))
+  dplyr::mutate(self_educ = factor(self_educ, levels = names(sub_cols))) %>% 
+  dplyr::mutate(cohort = factor(cohort, levels = sort(unique(cohort))))
 
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "self_educ", colors = sub_cols, 
-                hline_int = 25, hline_col = "#000")
+                hline_int = 25, hline_col = "#000", 
+                total_y = 90, total_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "self-educ", ".png"))

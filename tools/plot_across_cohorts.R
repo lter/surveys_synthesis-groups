@@ -25,14 +25,13 @@ plot_across_cohorts <- function(df = NULL, resp = NULL, facet = TRUE, colors = N
     facet <- TRUE }
   
   # Errors for 'colors'
-  if(is.null(colors) != TRUE){
-    if(is.character(colors) != TRUE || length(colors) < length(unique(df$cohort)))
-      stop("If provided, 'colors' must contain as many values as there are cohorts")
-  } else { colors <- "#892b64" }
+  if(is.null(colors) & facet == FALSE){ colors <- "#892b64" }
   
   # Bonus error for 'colors'
-  if(is.null(colors) != TRUE & facet == FALSE)
-   stop("Providing multiple 'colors' is necessary if not faceting graph")
+  if(is.null(colors) != TRUE & facet == FALSE){
+    if(is.character(colors) != TRUE || length(colors) < length(unique(df$cohort)))
+      stop("Providing multiple 'colors' is necessary if not faceting graph")
+  }
   
   # Make the bones of the desired graph
   p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = count, 

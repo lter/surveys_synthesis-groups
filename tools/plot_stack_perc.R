@@ -22,7 +22,7 @@ plot_stack_perc <- function(df = NULL, resp = NULL, colors = NULL,
     stop("'resp' must be a single column name found in 'df'")
   
   # Errors for 'colors'
-  if(is.null(colors) || is.character(colors) != TRUE || length(colors) < length(unique(df$resp)))
+  if(is.null(colors) || is.character(colors) != TRUE || length(colors) < length(unique(df[[resp]])))
     stop("'colors' must be provided and contain as many values as there are unique response values")
   
   # Errors for 'hline_int'

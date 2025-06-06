@@ -61,7 +61,11 @@ survey_prep <- function(df = NULL, resp = NULL, grp = "cohort"){
                        .groups = "keep") %>%
       dplyr::ungroup() %>% 
       # And calculate percent of responses per that category
-      dplyr::mutate(perc_resp = (count / total_particip) * 100)
+      dplyr::mutate(perc_resp = (count / total_particip) * 100) %>% 
+      # Compute total responses / category (**regardless of cohort**)
+      dplyr::group_by(!!rlang::ensym(resp)) %>% 
+      dplyr::mutate(cat_total = sum(count, na.rm = T)) %>% 
+      dplyr::ungroup()
     
   }
   

@@ -39,7 +39,7 @@ plot_stack_perc <- function(df = NULL, resp = NULL, colors = NULL,
   q <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = cohort, y = perc_resp, 
                                                          fill = .data[[resp]])) +
     ggplot2::geom_bar(stat = "identity") +
-    ggplot2::labs(x = "Cohort", y = "Percent of Participants") +
+    ggplot2::labs(x = "Cohort", y = "Percent of Participants (%)") +
     ggplot2::scale_fill_manual(values = colors) +
     # Horizontal lines (if provided)
     ggplot2::geom_hline(yintercept = hline_int, linetype = 2, color = hline_col) +

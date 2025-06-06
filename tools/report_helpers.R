@@ -20,8 +20,9 @@ library(ggplot2)
 lno_theme <- ggplot2::theme_bw() + 
   # Then do custom modificaitons
   ggplot2::theme(
-    # Always exclude legend titles
+    # Remove parts of legend that we never want
     legend.title = ggplot2::element_blank(),
+    legend.background = ggplot2::element_blank(),
     # Increase text size
     strip.text = element_text(size = 14),
     text = element_text(size = 14),

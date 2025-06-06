@@ -117,26 +117,19 @@ demo_sub <- demo %>%
   dplyr::filter(!is.na(race) & nchar(race) != 0) %>% 
   # Prepare for graph creation
   survey_prep(df = ., resp = "race", grp = "cohort") %>% 
-  # Reorder factor level
-  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+  # Wrap text so the axis is readable
+  dplyr::mutate(race = stringr::str_wrap(race, width = 20))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(race, cat_total), fill = cohort)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
-  scale_fill_manual(values = c("#662506", "#993404", "#cc4c02", 
-                               "#ec7014", "#fe9929", "#fec44f")) +
-  lno_theme +
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.85, 0.15),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_blank())
+plot_across_cohorts(df = demo_sub, resp = "race", facet = T,
+                   colors = c("#662506", "#993404", "#cc4c02", 
+                              "#ec7014", "#fe9929", "#fec44f"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "race", ".png"))
 
 # Export the graph
-ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+ggsave(filename = file.path("graphs", plotname), width = 8, height = 8, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname", "semi_ct")); gc()
@@ -336,23 +329,14 @@ demo_sub <- survey_prep(df = demo, resp = "personal_thinking_style", grp = "coho
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(personal_thinking_style, cat_total), 
-                               fill = rev(cohort))) +
-  geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
-  scale_fill_manual(values = c("#00441b", "#006d2c", "#2ca25f", 
-                               "#66c2a4", "#99d8c9", "#ccece6")) +
-  lno_theme +
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.85, 0.15),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_blank())
-
+plot_across_cohorts(df = demo_sub, resp = "personal_thinking_style", facet = T,
+                    colors = c("#00441b", "#006d2c", "#2ca25f", 
+                               "#66c2a4", "#99d8c9", "#ccece6"))
 # Generate nice file name
 (plotname <- paste0(filestem, "personal-thinking-style", ".png"))
 
 # Export the graph
-ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+ggsave(filename = file.path("graphs", plotname), width = 8, height = 8, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname")); gc()
@@ -370,23 +354,15 @@ demo_sub <- survey_prep(df = demo, resp = "group_project_approach", grp = "cohor
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(group_project_approach, cat_total), 
-                               fill = rev(cohort))) +
-  geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
-  scale_fill_manual(values = c("#49006a", "#7a0177", "#ae017e", 
-                               "#dd3497", "#f768a1", "#fa9fb5")) +
-  lno_theme +
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.85, 0.15),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_blank())
+plot_across_cohorts(df = demo_sub, resp = "group_project_approach", facet = T,
+                    colors = c("#49006a", "#7a0177", "#ae017e", 
+                               "#dd3497", "#f768a1", "#fa9fb5"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "group-project-approach", ".png"))
 
 # Export the graph
-ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+ggsave(filename = file.path("graphs", plotname), width = 8, height = 8, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname")); gc()
@@ -404,23 +380,15 @@ demo_sub <- survey_prep(df = demo, resp = "conflict_strategy", grp = "cohort") %
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(conflict_strategy, cat_total), 
-                               fill = rev(cohort))) +
-  geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
-  scale_fill_manual(values = c("#084081", "#0868ac", "#4eb3d3", 
-                               "#7bccc4", "#a8ddb5", "#e0f3db")) +
-  lno_theme +
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.85, 0.15),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_blank())
+plot_across_cohorts(df = demo_sub, resp = "conflict_strategy", facet = T,
+                    colors = c("#084081", "#0868ac", "#4eb3d3", 
+                               "#7bccc4", "#a8ddb5", "#e0f3db"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "conflict-strategy", ".png"))
 
 # Export the graph
-ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+ggsave(filename = file.path("graphs", plotname), width = 8, height = 8, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname")); gc()
@@ -522,17 +490,9 @@ demo_sub <- demo %>%
   dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = count, y = reorder(question, cat_total), 
-                               fill = rev(cohort))) +
-  geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
-  scale_fill_manual(values = c("#7f0000", "#b30000", "#d7301f", 
-                               "#ef6548", "#fdd49e", "#fff7ec")) +
-  lno_theme +
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.85, 0.15),
-        axis.text.y = element_text(size = 10),
-        axis.title.y = element_blank())
+plot_across_cohorts(df = demo_sub, resp = "question", facet = T,
+                    colors = c("#7f0000", "#b30000", "#d7301f", 
+                               "#ef6548", "#fdd49e", "#fff7ec"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "method-freq", ".png"))

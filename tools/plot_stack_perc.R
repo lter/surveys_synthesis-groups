@@ -45,6 +45,7 @@ plot_stack_perc <- function(df = NULL, resp = NULL, colors = NULL,
     ggplot2::scale_color_manual(values = "#000") +
     # Horizontal lines (if provided)
     ggplot2::geom_hline(yintercept = hline_int, linetype = 2, color = hline_col) +
+    ggplot2::guides(color = "none") +
     # Custom theme elements
     ggplot2::theme_bw() + 
     ggplot2::theme(legend.position = "top",

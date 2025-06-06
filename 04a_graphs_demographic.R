@@ -47,13 +47,8 @@ demo_sub <- survey_prep(df = demo, resp = "gender", grp = "cohort") %>%
   dplyr::mutate(gender = factor(gender, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = gender)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 50, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "gender", colors = sub_cols, 
+                hline_int = 50, hline_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "gender", ".png"))
@@ -80,14 +75,9 @@ demo_sub <- survey_prep(df = demo, resp = "sexuality", grp = "cohort") %>%
   dplyr::mutate(sexuality = factor(sexuality, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = sexuality)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  guides(fill = guide_legend(nrow = 2)) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "sexuality", colors = sub_cols, 
+                hline_int = 25, hline_col = "#000") +
+  guides(fill = guide_legend(nrow = 2))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "sexuality", ".png"))
@@ -165,14 +155,8 @@ demo_sub <- survey_prep(df = demo, resp = "latinx", grp = "cohort") %>%
   dplyr::mutate(latinx = factor(latinx, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = latinx)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  # guides(fill = guide_legend(nrow = 2)) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "latinx", colors = sub_cols, 
+                hline_int = 25, hline_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "latinx", ".png"))
@@ -200,14 +184,8 @@ demo_sub <- demo %>%
   dplyr::mutate(disability = factor(disability, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = disability)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  # guides(fill = guide_legend(nrow = 2)) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "disability", colors = sub_cols, 
+                hline_int = 25, hline_col = "gray80")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "disability", ".png"))
@@ -236,15 +214,8 @@ demo_sub <- survey_prep(df = demo, resp = "caregiving", grp = "cohort") %>%
   dplyr::mutate(caregiving = factor(caregiving, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = caregiving)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 75, linetype = 2) +
-  # geom_hline(yintercept = 50, linetype = 2) +
-  geom_hline(yintercept = 25, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "caregiving", colors = sub_cols, 
+                hline_int = c(25, 75), hline_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "caregiving", ".png"))
@@ -275,13 +246,8 @@ demo_sub <- demo %>%
   dplyr::mutate(first_gen = factor(first_gen, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = first_gen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
-  scale_fill_manual(values = sub_cols) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "first_gen", colors = sub_cols, 
+                hline_int = 25, hline_col = "gray80")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "first-gen", ".png"))
@@ -308,15 +274,8 @@ demo_sub <- survey_prep(df = demo, resp = "career_stage", grp = "cohort") %>%
   dplyr::mutate(career_stage = factor(career_stage, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = career_stage)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 75, linetype = 2) +
-  geom_hline(yintercept = 25, linetype = 2) +
-  scale_fill_manual(values = sub_cols) +
-  guides(fill = guide_legend(nrow = 2)) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "career_stage", colors = sub_cols, 
+                hline_int = c(25, 75), hline_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "career-stage", ".png"))
@@ -351,13 +310,8 @@ demo_sub <- demo %>%
   dplyr::mutate(professional_role = factor(professional_role, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = professional_role)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
-  scale_fill_manual(values = sub_cols) +
-  # guides(fill = guide_legend(nrow = 2)) +
-  lno_theme +
+plot_stack_perc(df = demo_sub, resp = "professional_role", colors = sub_cols, 
+                hline_int = 25, hline_col = "gray80") +
   theme(legend.position = "right")
 
 # Generate nice file name
@@ -493,13 +447,8 @@ demo_sub <- demo %>%
   dplyr::mutate(job_sector = factor(job_sector, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = job_sector)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
-  scale_fill_manual(values = sub_cols) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "job_sector", colors = sub_cols, 
+                hline_int = 25, hline_col = "gray80")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "job-sector", ".png"))
@@ -529,13 +478,8 @@ demo_sub <- demo %>%
   dplyr::mutate(self_educ = factor(self_educ, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = self_educ)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Cohort", y = "Percent of Participants") +
-  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
-  scale_fill_manual(values = sub_cols) +
-  lno_theme +
-  theme(legend.position = "top")
+plot_stack_perc(df = demo_sub, resp = "self_educ", colors = sub_cols, 
+                hline_int = 25, hline_col = "#000")
 
 # Generate nice file name
 (plotname <- paste0(filestem, "self-educ", ".png"))

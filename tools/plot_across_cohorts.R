@@ -36,10 +36,11 @@ plot_across_cohorts <- function(df = NULL, resp = NULL, facet = TRUE, colors = N
   # Make the bones of the desired graph
   p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = count, 
                                                          y = reorder(.data[[resp]], cat_total), 
-                                                         fill = cohort)) +
+                                                         fill = cohort, color = "x")) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::labs(x = "Number of Responses") +
     ggplot2::scale_fill_manual(values = colors) +
+    ggplot2::scale_color_manual(values = "#000") +
     ggplot2::theme_bw() + 
     ggplot2::theme(legend.title = ggplot2::element_blank(),
                    legend.background = ggplot2::element_blank(),

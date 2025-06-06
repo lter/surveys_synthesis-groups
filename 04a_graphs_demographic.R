@@ -256,4 +256,41 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
 
+## ------------------------------------- ##
+# First Generation (College) ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$first_gen))
+sub_cols <- c("No" = "#3f4139",
+              "Yes" = "#d2fa52",
+              "Prefer not to answer" = "gray70")
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  dplyr::mutate(first_gen = dplyr::case_when(
+    first_gen == "First person in family to attend college" ~ "Yes",
+    first_gen == "Not first person to attend college" ~ "No",
+    T ~ first_gen)) %>% 
+  survey_prep(df = ., resp = "first_gen", grp = "cohort") %>% 
+  dplyr::mutate(first_gen = factor(first_gen, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = first_gen)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
+  scale_fill_manual(values = sub_cols) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "first-gen", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
 # End ----

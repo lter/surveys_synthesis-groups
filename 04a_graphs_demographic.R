@@ -37,17 +37,21 @@ filestem <- "LTER_survey-00_demographics_"
 # Gender ----
 ## ------------------------------------- ##
 
+# Define desired category order and colors
+sort(unique(demo$gender))
+sub_cols <- c("Male" = "#219ebc", "Female" = "#ffb703", 
+              "Prefer To Self-Identify" = "gray70")
+
 # Prepare the data for plotting
 demo_sub <- survey_prep(df = demo, resp = "gender", grp = "cohort") %>% 
-  dplyr::mutate(gender = factor(gender, levels = c("Male", "Female",
-                                                   "Prefer To Self-Identify")))
+  dplyr::mutate(gender = factor(gender, levels = names(sub_cols)))
 
 # Make desired graph
 ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = gender)) +
   geom_bar(stat = "identity") +
   labs(x = "Cohort", y = "Percent of Participants") +
   geom_hline(yintercept = 50, linetype = 2) +
-  scale_fill_manual(values = c("#219ebc", "#ffb703", "#000")) +
+  scale_fill_manual(values = sub_cols) +
   lno_theme +
   theme(legend.position = "top")
 
@@ -56,5 +60,48 @@ ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = gender)) +
 
 # Export the graph
 ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Sexuality ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$sexuality))
+sub_cols <- c("Does not identify as LGBTQI" = "#669bbc",
+              "Identifies as LGBTQI" = "#c1121f", 
+              "Prefer to self-identify" = "gray70",
+              "Prefer not to answer" = "#000")
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "sexuality", grp = "cohort") %>% 
+  dplyr::mutate(sexuality = factor(sexuality, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = sexuality)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  scale_fill_manual(values = sub_cols) +
+  guides(fill = guide_legend(nrow = 2)) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "sexuality", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+
+
+
+
+
+
 
 # End ----

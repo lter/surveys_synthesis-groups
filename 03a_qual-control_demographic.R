@@ -58,9 +58,7 @@ demo_v3 <- demo_v2 %>%
                             no = paste(secondary_disc, secondary_disc_other)),
     gender = ifelse(is.na(gender_other), yes = gender, no = paste(gender, gender_other)),
     family_educ = ifelse(is.na(family_educ_other), yes = family_educ,
-                         no = paste(family_educ, family_educ_other)),
-    latinx = ifelse(is.na(latinx_other), yes = as.character(latinx),
-                    no = paste(latinx, latinx_other))
+                         no = paste(family_educ, family_educ_other))
   ) %>%
   # Rename the 'race_other' column for later processing
   dplyr::rename(race_text = race_other) %>%
@@ -107,11 +105,54 @@ supportR::count(vec = demo_v4$career_stage)
 dplyr::glimpse(demo_v4)
 
 ## ------------------------------------- ##
+# Synonymize Race Categories ----
+## ------------------------------------- ##
+
+# Some of the syntax of these differed between survey variants but not the meaning
+## Feels safe to synonymize those for visualization purposes
+# In the first form all race answers are concatenated in a single column.
+# In the second variant, each checkbox option gained its own column
+demo_v5 <- demo_v4 %>%
+  # Combine all race questions into a single column
+  dplyr::mutate(dplyr::across(.cols = dplyr::contains("race"),
+                              .fns = ~ ifelse(nchar(.) == 0, yes = NA, no = .))) %>% 
+  tidyr::unite(col = "race_new", dplyr::contains("race"), sep = "; ", na.rm = T) %>%
+  # Tidy that column
+  dplyr::mutate(race_simp = dplyr::case_when(
+    race_new == "Asian,other racial or ethnic group(s):; south east asian" ~ "Asian; Other racial or ethnic group(s): south east asian",
+    race_new == "Asian,White/Caucasian" ~ "Asian; White/Caucasian",
+    race_new == "American Indian/Native American,White/Caucasian" ~ "American Indian/Native American; White/Caucasian",
+    race_new == "Black/African American" ~ "Black Or African American",
+    tolower(race_new) == tolower("South East Asian; Asian,Other Racial Or Ethnic Group(s):") ~ "South East Asian; Asian",
+    # race_new == "" ~ "",
+    T ~ as.character(race_new) ),
+    # Make each word capitalized
+    race_title = stringr::str_to_title(race_simp),
+    # And fix any errors that introduced
+    race_title = gsub('Latino/A', 'Latino/a', race_title),
+    race_title = gsub('Group\\(S\\)', 'Group(s)', race_title),
+    race_title = gsub('American Indian/Native American', 'American Indian Or Alaska Native', race_title)) %>%
+  # Do some more revisions
+  dplyr::mutate(race = dplyr::case_when(
+    race_title %in% c("Mexican", "Hispanic", "Latin American",
+                      "Latinx", "Latino") ~ "Hispanic Or Latino/a",
+    # race_title == "" ~ "",
+    T ~ race_title)) %>%
+  # Remove the united/messy and the tidy but not cased appropriately columns
+  dplyr::select(-race_new, -race_simp, -race_title)
+
+# Check that out briefly
+supportR::count(vec = demo_v5$race)
+
+# Re-check structure
+dplyr::glimpse(demo_v5)
+
+## ------------------------------------- ##
 # Fix Typos & Casing Issues ----
 ## ------------------------------------- ##
 
 # Casing of categorical options differed between surveys so we need to standardize to get the real number of groups
-demo_v5 <- demo_v4 %>%
+demo_v6 <- demo_v5 %>%
   dplyr::mutate(
     # Standardize professional role
     professional_role = tolower(professional_role),
@@ -144,11 +185,11 @@ demo_v5 <- demo_v4 %>%
     self_educ = gsub("^PhD$", "doctoral degree (PhD)", self_educ),
     self_educ = gsub("Master's degree", "master's degree", self_educ),
     self_educ = gsub("bachelor's degree", "4-year degree", self_educ),
-    latinx = case_when(latinx == "Yes" ~ "Identifies as Latino/a",
-                       latinx == "No" ~ "Does not identify as Latino/a",
-                       stringr::str_detect(race, pattern = "Latin") == T ~ "Identifies as Latino/a",
-                       stringr::str_detect(race, pattern = "Latin") == F & !is.na(race) ~ "Does not identify as Latino/a",
-                       T ~ as.character(latinx)),
+    latinx = dplyr::case_when(latinx == "Yes" ~ "Identifies as Latino/a",
+                              latinx == "No" ~ "Does not identify as Latino/a",
+                              stringr::str_detect(race, pattern = "Latin") == T ~ "Identifies as Latino/a",
+                              stringr::str_detect(race, pattern = "Latin") == F & !is.na(race) ~ "Does not identify as Latino/a",
+                              T ~ latinx),
     first_gen = dplyr::case_when(
       # Yes
       first_gen == "Yes" ~ "First person in family to attend college",
@@ -160,54 +201,11 @@ demo_v5 <- demo_v4 %>%
       T ~ as.character(first_gen)) )
 
 # Re-check structure
-dplyr::glimpse(demo_v5)
+dplyr::glimpse(demo_v6)
 
 # Check out one of those repairs
-supportR::count(vec = demo_v4$first_gen)
-supportR::count(vec = demo_v5$first_gen)
-
-## ------------------------------------- ##
-# Synonymize Race Categories ----
-## ------------------------------------- ##
-
-# Some of the syntax of these differed between survey variants but not the meaning
-## Feels safe to synonymize those for visualization purposes
-# In the first form all race answers are concatenated in a single column.
-# In the second variant, each checkbox option gained its own column
-demo_v6 <- demo_v5 %>%
-  # Combine all race questions into a single column
-  dplyr::mutate(dplyr::across(.cols = dplyr::contains("race"),
-                              .fns = ~ ifelse(nchar(.) == 0, yes = NA, no = .))) %>% 
-  tidyr::unite(col = "race_new", dplyr::contains("race"), sep = "; ", na.rm = T) %>%
-  # Tidy that column
-  dplyr::mutate(race_simp = dplyr::case_when(
-    race_new == "Asian,other racial or ethnic group(s):; south east asian" ~ "Asian; Other racial or ethnic group(s): south east asian",
-    race_new == "Asian,White/Caucasian" ~ "Asian; White/Caucasian",
-    race_new == "American Indian/Native American,White/Caucasian" ~ "American Indian/Native American; White/Caucasian",
-    race_new == "Black/African American" ~ "Black Or African American",
-    tolower(race_new) == tolower("South East Asian; Asian,Other Racial Or Ethnic Group(s):") ~ "South East Asian; Asian",
-    # race_new == "" ~ "",
-    T ~ as.character(race_new) ),
-    # Make each word capitalized
-    race_title = stringr::str_to_title(race_simp),
-    # And fix any errors that introduced
-    race_title = gsub('Latino/A', 'Latino/a', race_title),
-    race_title = gsub('Group\\(S\\)', 'Group(s)', race_title),
-    race_title = gsub('American Indian/Native American', 'American Indian Or Alaska Native', race_title)) %>%
-  # Do some more revisions
-  dplyr::mutate(race = dplyr::case_when(
-    race_title %in% c("Mexican", "Hispanic", "Latin American",
-                      "Latinx", "Latino") ~ "Hispanic Or Latino/a",
-    # race_title == "" ~ "",
-    T ~ race_title)) %>%
-  # Remove the united/messy and the tidy but not cased appropriately columns
-  dplyr::select(-race_new, -race_simp, -race_title)
-
-# Check that out briefly
-supportR::count(vec = demo_v6$race)
-
-# Re-check structure
-dplyr::glimpse(demo_v6)
+supportR::count_diff(vec1 = demo_v5$first_gen, vec2 = demo_v6$first_gen)
+supportR::count_diff(vec1 = demo_v5$latinx, vec2 = demo_v6$latinx)
 
 ## ------------------------------------- ##
 # Reorder & Streamline Columns ----

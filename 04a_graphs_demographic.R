@@ -83,6 +83,7 @@ demo_sub <- survey_prep(df = demo, resp = "sexuality", grp = "cohort") %>%
 ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = sexuality)) +
   geom_bar(stat = "identity") +
   labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2) +
   scale_fill_manual(values = sub_cols) +
   guides(fill = guide_legend(nrow = 2)) +
   lno_theme +
@@ -151,7 +152,37 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname", "semi_ct")); gc()
 
+## ------------------------------------- ##
+# Latinx ----
+## ------------------------------------- ##
 
+# Define desired category order and colors
+sort(unique(demo$latinx))
+sub_cols <- c("Does not identify as Latino/a" = "#6d597a",
+              "Identifies as Latino/a" = "#e56b6f")
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "latinx", grp = "cohort") %>% 
+  dplyr::mutate(latinx = factor(latinx, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = latinx)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2) +
+  scale_fill_manual(values = sub_cols) +
+  # guides(fill = guide_legend(nrow = 2)) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "latinx", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
 
 
 

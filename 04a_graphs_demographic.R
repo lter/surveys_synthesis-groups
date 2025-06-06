@@ -126,22 +126,21 @@ demo_sub <- demo %>%
   # Remove NAs that introduces
   dplyr::filter(!is.na(race) & nchar(race) != 0) %>% 
   # Prepare for graph creation
-  survey_prep(df = ., resp = "race", grp = "cohort")
-  
-
-str(demo_sub)
-
+  survey_prep(df = ., resp = "race", grp = "cohort") %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
 # Make desired graph
 ggplot(demo_sub, mapping = aes(x = count, y = reorder(race, count), fill = cohort)) +
   geom_bar(stat = "identity") +
+  labs(x = "Number of Responses") +
   scale_fill_manual(values = c("#662506", "#993404", "#cc4c02", 
                                "#ec7014", "#fe9929", "#fec44f")) +
   lno_theme +
   theme(legend.position = "inside",
-        legend.position.inside = c(0.7, 0.2),
+        legend.position.inside = c(0.85, 0.15),
         axis.text.y = element_text(size = 10),
-        axis.title = element_blank())
+        axis.title.y = element_blank())
 
 # Generate nice file name
 (plotname <- paste0(filestem, "race", ".png"))
@@ -292,5 +291,116 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Career Stage ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$career_stage))
+sub_cols <- c("prep (0 years)" = "#90e0ef",
+              "early (1-9 years)" = "#00b4d8", 
+              "mid (10-25 years)" = "#0077b6", 
+              "mature (26+ years)" = "#03045e")
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "career_stage", grp = "cohort") %>% 
+  dplyr::mutate(career_stage = factor(career_stage, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = career_stage)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 75, linetype = 2) +
+  geom_hline(yintercept = 25, linetype = 2) +
+  scale_fill_manual(values = sub_cols) +
+  guides(fill = guide_legend(nrow = 2)) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "career-stage", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Professional Role ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$professional_role))
+sub_cols <- c("researcher" = "#5f0f40",
+              "stakeholder" = "#9a031e", 
+              "data professional" = "#fb8b24", 
+              "educator" = "#e36414", 
+              "administrator" = "#227c9d", 
+              "project manager" = "#0f4c5c", 
+              "other" = "gray70")
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  dplyr::mutate(professional_role = dplyr::case_when(
+    professional_role == "researcher/scientific expert" ~ "researcher",
+    professional_role == "advisor/stakeholder" ~ "stakeholder",
+    T ~ professional_role)) %>% 
+  survey_prep(df = ., resp = "professional_role", grp = "cohort") %>% 
+  dplyr::mutate(professional_role = factor(professional_role, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = professional_role)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
+  scale_fill_manual(values = sub_cols) +
+  # guides(fill = guide_legend(nrow = 2)) +
+  lno_theme +
+  theme(legend.position = "right")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "professional-role", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Personal Thinking Style ----
+## ------------------------------------- ##
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "personal_thinking_style", grp = "cohort") %>% 
+  # Wrap text so the axis is readable
+  dplyr::mutate(personal_thinking_style = stringr::str_wrap(personal_thinking_style, 
+                                                            width = 40)) %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(personal_thinking_style, count), 
+                               fill = rev(cohort))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Number of Responses") +
+  scale_fill_manual(values = c("#00441b", "#006d2c", "#2ca25f", 
+                               "#66c2a4", "#99d8c9", "#ccece6")) +
+  lno_theme +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.85, 0.15),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_blank())
+
+# Generate nice file name
+(plotname <- paste0(filestem, "personal-thinking-style", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname")); gc()
 
 # End ----

@@ -403,4 +403,200 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("demo_sub", "plotname")); gc()
 
+## ------------------------------------- ##
+# Group Project Approach ----
+## ------------------------------------- ##
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "group_project_approach", grp = "cohort") %>% 
+  # Wrap text so the axis is readable
+  dplyr::mutate(group_project_approach = stringr::str_wrap(group_project_approach, 
+                                                            width = 40)) %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(group_project_approach, count), 
+                               fill = rev(cohort))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Number of Responses") +
+  scale_fill_manual(values = c("#49006a", "#7a0177", "#ae017e", 
+                               "#dd3497", "#f768a1", "#fa9fb5")) +
+  lno_theme +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.85, 0.15),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_blank())
+
+# Generate nice file name
+(plotname <- paste0(filestem, "group-project-approach", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname")); gc()
+
+## ------------------------------------- ##
+# Conflict Resolution Strategy ----
+## ------------------------------------- ##
+
+# Prepare the data for plotting
+demo_sub <- survey_prep(df = demo, resp = "conflict_strategy", grp = "cohort") %>% 
+  # Wrap text so the axis is readable
+  dplyr::mutate(conflict_strategy = stringr::str_wrap(conflict_strategy, 
+                                                           width = 40)) %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(conflict_strategy, count), 
+                               fill = rev(cohort))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Number of Responses") +
+  scale_fill_manual(values = c("#084081", "#0868ac", "#4eb3d3", 
+                               "#7bccc4", "#a8ddb5", "#e0f3db")) +
+  lno_theme +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.85, 0.15),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_blank())
+
+# Generate nice file name
+(plotname <- paste0(filestem, "conflict-strategy", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname")); gc()
+
+## ------------------------------------- ##
+# Job Sector ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$job_sector))
+sub_cols <- c("Academia" = "#004e98",
+              "Government" = "#cc0000", 
+              "Non-Profit" = "#ffc300", 
+              "Other" = "gray70")
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  dplyr::mutate(job_sector = dplyr::case_when(
+    job_sector == "Non-profit sector" ~ "Non-Profit",
+    job_sector == "Academic research" ~ "Academia",
+    job_sector == "State, local or federal government" ~ "Government",
+    T ~ job_sector)) %>% 
+  survey_prep(df = ., resp = "job_sector", grp = "cohort") %>% 
+  dplyr::mutate(job_sector = factor(job_sector, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = job_sector)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
+  scale_fill_manual(values = sub_cols) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "job-sector", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Job Sector ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(demo$self_educ))
+sub_cols <- c("doctoral degree" = "#1780a1",
+              "master's degree" = "#5c4d7d",
+              "4-year degree" = "#a01a58")
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  dplyr::mutate(self_educ = dplyr::case_when(
+    self_educ == "doctoral degree (PhD)" ~ "doctoral degree",
+    T ~ self_educ)) %>% 
+  survey_prep(df = ., resp = "self_educ", grp = "cohort") %>% 
+  dplyr::mutate(self_educ = factor(self_educ, levels = names(sub_cols)))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = cohort, y = perc_resp, fill = self_educ)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Cohort", y = "Percent of Participants") +
+  geom_hline(yintercept = 25, linetype = 2, color = "gray80") +
+  scale_fill_manual(values = sub_cols) +
+  lno_theme +
+  theme(legend.position = "top")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "self-educ", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Method Frequency ----
+## ------------------------------------- ##
+
+# Prepare the data for plotting
+demo_sub <- demo %>% 
+  # Pare down to desired columns only
+  dplyr::select(cohort, dplyr::contains("method_freq")) %>% 
+  # Pivot to long format
+  tidyr::pivot_longer(cols = -cohort, names_to = 'question', values_to = 'answer') %>%
+  # Filter out non-responses (i.e., NAs)
+  dplyr::filter(!is.na(answer) & nchar(as.character(answer)) != 0) %>% 
+  # Filter to only desired answer levels
+  dplyr::filter(answer %in% c("Always", "Often")) %>%
+  # Prepare for survey creation
+  survey_prep(df = ., resp = "question", grp = "cohort") %>% 
+  # Make better-formatted text (for graph axis marks)
+  dplyr::mutate(question = dplyr::case_when(
+    question == "method_freq_case_study" ~ "Case Studies",
+    question == "method_freq_mix" ~ "Mixed Methods",
+    question == "method_freq_participatory" ~ "Participatory",
+    question == "method_freq_policy" ~ "Policy",
+    question == "method_freq_qual" ~ "Qualitative",
+    question == "method_freq_quant" ~ "Quantitative",
+    question == "method_freq_simulation" ~ "Simulation",
+    question == "method_freq_action" ~ "Action",
+    question == "method_freq_deductive" ~ "Deductive",
+    question == "method_freq_inductive" ~ "Inductive")) %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+
+# Make desired graph
+ggplot(demo_sub, mapping = aes(x = count, y = reorder(question, count), 
+                               fill = rev(cohort))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Number of Responses") +
+  scale_fill_manual(values = c("#7f0000", "#b30000", "#d7301f", 
+                               "#ef6548", "#fdd49e", "#fff7ec")) +
+  lno_theme +
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.85, 0.15),
+        axis.text.y = element_text(size = 10),
+        axis.title.y = element_blank())
+
+# Generate nice file name
+(plotname <- paste0(filestem, "method-freq", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("demo_sub", "plotname")); gc()
+
 # End ----

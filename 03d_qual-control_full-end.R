@@ -68,10 +68,14 @@ end_v3 <- end_v2 %>%
                                          yes = NA_character_, no = synthesis_group)) %>% 
   # Identify missing group names
   dplyr::mutate(synthesis_group = dplyr::case_when(
-    start_y_m %in% c("2019-02", "2019-04") ~ "Metacommunities", # Last mtg = 11/5/2018
-    start_y_m %in% c("2019-09") ~ "C2E", # Last mtg = 7/15/2019
-    start_y_m %in% c("2019-10") ~ "Stream Cycling", # Last mtg = 9/11/2019
-    T ~ synthesis_group)) %>% 
+    start_y_m == "2019-02" ~ "Metacommunities", 
+    start_y_m == "2019-04" ~ "Stream Cycling", 
+    ## (^^) 4th meeting in Sep 2019 but 3rd was Apr 2019 so must have gotten this survey then
+    start_y_m == "2019-09" ~ "2017",
+    ## (^^) If Stream Cycling was surveyed in Apr, only 2017 cohort groups had final meetings this month
+    ## Both Synchrony & Biodiversity-Productivity met that month
+    start_y_m == "2019-10" ~ "SOM",
+    T ~ synthesis_group)) %>%
   # Identify cohort information too
   dplyr::mutate(cohort = case_when(
     # 2016

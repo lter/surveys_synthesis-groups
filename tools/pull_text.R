@@ -30,5 +30,14 @@ pull_text <- function(df = NULL, text = NULL){
     # Wrap text
     base::strwrap(x = .)
   
-  # Return that
-  return(words) }
+  # If there are any responses, return them
+  if(length(words) >= 1){
+    return(words)
+    
+    # Otherwise, return a boilerplate message
+  } else {  
+    return("No free text responses to this question.") 
+  } 
+}
+
+# End ----

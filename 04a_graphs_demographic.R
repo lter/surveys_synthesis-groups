@@ -275,7 +275,8 @@ demo_sub <- survey_prep(df = demo, resp = "career_stage", grp = "cohort") %>%
 # Make desired graph
 plot_stack_perc(df = demo_sub, resp = "career_stage", colors = sub_cols, 
                 hline_int = c(25, 75), hline_col = "#000", 
-                total_y = 88, total_col = "#000")
+                total_y = 88, total_col = "#000") +
+  guides(fill = guide_legend(nrow = 2))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "career-stage", ".png"))

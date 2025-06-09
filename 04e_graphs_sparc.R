@@ -122,7 +122,7 @@ plot_stack_perc(df = sparc_sub, resp = "future_sparc_encourage_peer", colors = s
   guides(fill = guide_legend(nrow = 2))
 
 # Generate nice file name
-(plotname <- paste0(filestem, "future-encourage_peer", ".png"))
+(plotname <- paste0(filestem, "future-encourage-peer", ".png"))
 
 # Export the graph
 ggsave(filename = file.path("graphs", plotname), width = 5, height = 5, units = "in")

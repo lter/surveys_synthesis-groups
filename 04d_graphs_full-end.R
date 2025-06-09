@@ -118,7 +118,7 @@ plot_stack_perc(df = end_sub, resp = "future_wg_encourage_peer", colors = sub_co
                 total_y = 90, total_col = "#000")
 
 # Generate nice file name
-(plotname <- paste0(filestem, "future-encourage_peer", ".png"))
+(plotname <- paste0(filestem, "future-encourage-peer", ".png"))
 
 # Export the graph
 ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")

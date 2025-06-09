@@ -147,7 +147,12 @@ early_v3c <- early_v3b %>%
                       values_to = "time_as") %>%
   # Standardize entries
   dplyr::mutate(time_as = dplyr::case_when(
-    # time_as %in% c() ~ "",
+    time_as %in% c("Less than 5 hours (less than 30 min per month)") ~ "Less than 30 min/month",
+    time_as %in% c("10 - 20 hours (~ 1 - 2 hours per month)",
+                   "5 - 10 hours (~ 30 min to 1 hour per month)") ~ "30 min to 2 hr/month",
+    time_as %in% c("20 - 40 hours (~ 2 - 3 hours per month)",
+                   "40 - 80 hours (~ 4 - 6 hours per month)") ~ "2-6 hr/month",
+    time_as %in% c("more than 80 hours (more than ~ 6 hours per month)") ~ "More than 6 hr/month",
     T ~ time_as))
 
 # Check unique values

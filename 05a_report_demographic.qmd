@@ -8,9 +8,6 @@ engine: knitr
 ```{r setup}
 #| include: false
 
-# Load libraries
-
-
 # Read in the data
 demo <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_demographic.csv"))
 

@@ -1,0 +1,125 @@
+---
+format: pdf
+engine: knitr
+---
+
+# LTER Working Group Survey Report -- Demographics & Perspectives
+
+```{r setup}
+#| include: false
+
+# Load libraries
+
+
+# Read in the data
+demo <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_demographic.csv"))
+
+# Load needed custom function(s)
+source(file.path("tools", "pull_text.R"))
+```
+
+This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(demo)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
+
+### Please select the gender with which you identify.
+
+For all graphs of this style, the number at the top of each cohort's bar reflects the total number of responses to this question.
+
+![](graphs/LTER_survey-00_demographics_gender.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you identify as gay or lesbian, bisexual, transgender, transsexual and/or belonging to the LGBTQI community?
+
+![](graphs/LTER_survey-00_demographics_sexuality.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Please select all the categories with which you identify.
+
+Note that entries including multiple racial/ethnic identities were split such that a single individual will be included separately in the count for each identity that they selected.
+
+![](graphs/LTER_survey-00_demographics_race.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you identify as Hispanic or Latino/a?
+
+![](graphs/LTER_survey-00_demographics_latinx.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you identify as neuro-divergent or are you affected by a significant sensory or mobility challenge?
+
+![](graphs/LTER_survey-00_demographics_disability.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Are you regularly responsible for the care of one or more people who are not able to fully care for themselves (e.g., child, elderly relative, person with health condition, sensory or mobility challenges)?
+
+![](graphs/LTER_survey-00_demographics_caregiving.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Are you the first person in your family to attend college?
+
+![](graphs/LTER_survey-00_demographics_first-gen.png){width="90%" fig-align="center"}
+
+\newpage
+
+### How would you describe your current stage in your career?
+
+![](graphs/LTER_survey-00_demographics_career-stage.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Which of these best describes your primary professional role or identity?
+
+![](graphs/LTER_survey-00_demographics_professional-role.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Which of the following statements **best** describes your working style?
+
+![](graphs/LTER_survey-00_demographics_personal-thinking-style.png){width="90%" fig-align="center"}
+
+\newpage
+
+### When you begin work on a group project, which **activity** is most important to you?
+
+![](graphs/LTER_survey-00_demographics_group-project-approach.png){width="90%" fig-align="center"}
+
+\newpage
+
+### When there is a conflict between people over ideas, which **primary strategy** do you prefer to use when seeking to resolve such conflicts?
+
+![](graphs/LTER_survey-00_demographics_conflict-strategy.png){width="90%" fig-align="center"}
+
+\newpage
+
+### What is the main sector in which you work?
+
+![](graphs/LTER_survey-00_demographics_job-sector.png){width="90%" fig-align="center"}
+
+\newpage
+
+### What is the highest level of formal education **you** have completed? [Emphasis added *post hoc*]
+
+![](graphs/LTER_survey-00_demographics_self-educ.png){width="90%" fig-align="center"}
+
+\newpage
+
+### How often do you use the following approaches in your research?
+
+Responses of "Always" or "Often"
+
+![](graphs/LTER_survey-00_demographics_method-freq.png){width="90%" fig-align="center"}
+
+> Un-Abbreviated Axis Explanation
+
+|  |  |
+|:---|:---|
+| Computational, Modeling, or Simulation | Quantitative Research |
+| Qualitative Research | Policy Research |
+| Participatory Research | Mixed Methods Research |
+| Inductive Research | Deductive Research |
+| Case Study Research | Action Research |

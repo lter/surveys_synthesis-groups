@@ -69,6 +69,64 @@ ggsave(filename = file.path("graphs", plotname), width = 7, height = 7, units = 
 rm(list = c("end_sub", "plotname", "sub_cols")); gc()
 
 ## ------------------------------------- ##
+# Future WG Interest (Self) ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(end$future_wg_interest_self))
+sub_cols <- c("Extremely interested" = "#642ca9",
+              "Quite interested" = "#ff36ab",
+              "Somewhat interested" = "#ff74d4",
+              "Neither interested nor disinterested" = "#ffdde1")
+
+# Prepare the data for plotting
+end_sub <- survey_prep(df = end, resp = "future_wg_interest_self", grp = "cohort") %>% 
+  dplyr::mutate(future_wg_interest_self = factor(future_wg_interest_self, levels = names(sub_cols)))
+
+# Make desired graph
+plot_stack_perc(df = end_sub, resp = "future_wg_interest_self", colors = sub_cols, 
+                hline_int = 25, hline_col = "gray80", 
+                total_y = 90, total_col = "#fff") +
+  guides(fill = guide_legend(nrow = 2))
+
+# Generate nice file name
+(plotname <- paste0(filestem, "future-interest-self", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("end_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Encourage Colleague ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(end$future_wg_encourage_peer))
+sub_cols <- c("Extremely likely" = "#31cb00",
+              "Quite likely" = "#119822",
+              "Somewhat likely" = "#1e441e")
+
+# Prepare the data for plotting
+end_sub <- survey_prep(df = end, resp = "future_wg_encourage_peer", grp = "cohort") %>% 
+  dplyr::mutate(future_wg_encourage_peer = factor(future_wg_encourage_peer, levels = names(sub_cols)))
+
+# Make desired graph
+plot_stack_perc(df = end_sub, resp = "future_wg_encourage_peer", colors = sub_cols, 
+                hline_int = 25, hline_col = "#000", 
+                total_y = 90, total_col = "#000")
+
+# Generate nice file name
+(plotname <- paste0(filestem, "future-encourage_peer", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("end_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
 # Expectation Evolution ----
 ## ------------------------------------- ##
 
@@ -90,6 +148,37 @@ plot_stack_perc(df = end_sub, resp = "expectations_evolve", colors = sub_cols,
 
 # Generate nice file name
 (plotname <- paste0(filestem, "expectations-evolve", ".png"))
+
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("end_sub", "plotname", "sub_cols")); gc()
+
+## ------------------------------------- ##
+# Personal Skill Utilization ----
+## ------------------------------------- ##
+
+# Define desired category order and colors
+sort(unique(end$asset_used))
+sub_cols <- c("Extremely well-utilized" = "#392f5a",
+              "Moderately well-utilized" = "#9dd9d2",
+              "Neither well- nor poorly-utilized" = "#fff8f0",
+              "Poorly utilized" = "#f4d06f",
+              "Extremely poorly utilized" = "#ff8811")
+
+# Prepare the data for plotting
+end_sub <- survey_prep(df = end, resp = "asset_used", grp = "cohort") %>% 
+  dplyr::mutate(asset_used = factor(asset_used, levels = names(sub_cols)))
+
+# Make desired graph
+plot_stack_perc(df = end_sub, resp = "asset_used", colors = sub_cols, 
+                hline_int = 25, hline_col = "#000", 
+                total_y = 30, total_col = "#000") +
+  guides(fill = guide_legend(nrow = 2))
+
+# Generate nice file name
+(plotname <- paste0(filestem, "asset-used", ".png"))
 
 # Export the graph
 ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
@@ -156,9 +245,53 @@ ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = 
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("end_sub", "plotname")); gc()
 
+## ------------------------------------- ##
+# Support Value ----
+## ------------------------------------- ##
 
+# Prepare the data for plotting
+end_sub <- end %>% 
+  # Pare down to desired columns only
+  dplyr::select(cohort, dplyr::contains("support_value")) %>% 
+  # Pivot to long format
+  tidyr::pivot_longer(cols = -cohort, names_to = 'question', values_to = 'answer') %>%
+  # Filter out non-responses (i.e., NAs)
+  dplyr::filter(!is.na(answer) & nchar(as.character(answer)) != 0) %>%
+  # Filter to only desired answer levels
+  dplyr::filter(answer %in% c("Helped significantly")) %>%
+  # Drop unwanted 'other benefit' column
+  dplyr::filter(question != "support_value_other_text") %>% 
+  # Prepare for survey creation
+  survey_prep(df = ., resp = "question", grp = "cohort") %>% 
+  # Make better-formatted text (for graph axis marks)
+  dplyr::mutate(question = dplyr::case_when(
+    question == "support_value_analysis_id" ~ "Identify Analyses",
+    question == "support_value_comm_group" ~ "Within Group Communication",
+    question == "support_value_comm_public" ~ "Communication to Public",
+    question == "support_value_data_get" ~ "Acquire Data",
+    question == "support_value_data_prep" ~ "Prepare Data",
+    question == "support_value_id_new_participants" ~ "Identify New Participants",
+    question == "support_value_plan_mtgs_in_person" ~ "Meeting Logistics",
+    question == "support_value_mtg_facilitation" ~ "Meeting Facilitation",
+    question == "support_value_plan_mtgs_virtual" ~ "Meeting Virtually",
+    question == "support_value_teamwork" ~ "Teamwork Facilitation",
+    question == "support_value_workflow" ~ "Workflow Development",
+    T ~ question)) %>% 
+  # Reorder factor level
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
 
+# Make desired graph
+plot_across_cohorts(df = end_sub, resp = "question", facet = T,
+                    colors = c("#05668d", "#028090", "#00a896", 
+                               "#02c39a", "#f0f3bd"))
 
+# Generate nice file name
+(plotname <- paste0(filestem, "support-value", ".png"))
 
+# Export the graph
+ggsave(filename = file.path("graphs", plotname), width = 6, height = 3, units = "in")
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("end_sub", "plotname")); gc()
 
 # End ----

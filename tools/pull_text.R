@@ -27,6 +27,8 @@ pull_text <- function(df = NULL, text = NULL){
     dplyr::pull() %>% 
     # Sort it
     sort() %>% 
+    # Now reverse it
+    rev() %>% 
     # Wrap text
     base::strwrap(x = .)
   

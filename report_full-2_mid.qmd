@@ -1,0 +1,52 @@
+---
+format: pdf
+engine: knitr
+---
+
+# LTER Working Group Survey Report -- Mid Working Group Expectations
+
+```{r setup}
+#| include: false
+
+# Read in the data
+mid <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_mid-point.csv"))
+
+# Load needed custom function(s)
+source(file.path("tools", "pull_text.R"))
+```
+
+This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(mid)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

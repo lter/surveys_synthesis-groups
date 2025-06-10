@@ -8,6 +8,9 @@ engine: knitr
 ```{r setup}
 #| include: false
 
+# Load needed libraries
+library(tidyverse)
+
 # Read in the data
 mid <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_mid-point.csv"))
 
@@ -16,6 +19,67 @@ source(file.path("tools", "pull_text.R"))
 ```
 
 This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(mid)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
+
+### How satisfied are you with your participation so far in the working group?
+
+![](graphs/LTER_survey-02_full-wg-mid-project_satisfaction.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you have suggestions for things that could increase your satisfaction with participation in the working group? If so, please share them here.
+
+```{r satisfaction-suggestions}
+#| echo: false
+# Extract free text responses
+pull_text(df = mid, text = "satisfaction_suggestion_text")
+```
+
+\newpage
+
+### As part of the survey you completed during your first meeting, you described your expectations regarding the working group’s research products or other outcomes. To what degree have your expectations changed or evolved since that first meeting?
+
+![](graphs/LTER_survey-02_full-wg-mid-project_expectations-evolve.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Please describe briefly how your expectations for the working group have changed or evolved.
+
+```{r expectations-evolve-text}
+#| echo: false
+pull_text(df = mid, text = "expectations_evolve_text")
+```
+
+\newpage
+
+### At this point in your project, to what degree have you experienced the following benefits through your participation in the working group?
+
+Responses of "Great Benefit"
+
+![](graphs/LTER_survey-02_full-wg-mid-project_benefits.png){width="90%" fig-align="center"}
+
+> Un-Abbreviated Axis Explanation
+
+| | |
+|:---|:---|
+| The opportunity to have others' ideas enhance my work | Building/expanding a professional network |
+| The chance to participate in group problem solving | The opportunity to gain deeper understanding of other disciplines |
+| Authorship on academic publications or reports | Acquiring new areas of expertise |
+| The chance to solve complex problems more quickly | Acquiring new technical or analytic skills |
+| Receiving mentorship from more senior colleagues | Access to datasets |
+| Opportunities to participate in public communication about the project | Leadership opportunities |
+| Providing mentorship to more junior colleagues | Authorship on derived datasets or analytic software |
+| Understanding people, cultures and forms of knowledge that are new to me | Better understanding the importance and techniques for safeguarding sensitive data and knowledge systems |
+| Opportunities to co-create science with end users and decision makers | |
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -8,6 +8,9 @@ engine: knitr
 ```{r setup}
 #| include: false
 
+# Load needed libraries
+library(tidyverse)
+
 # Read in the data
 early <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_full_first-meeting.csv"))
 
@@ -17,36 +20,81 @@ source(file.path("tools", "pull_text.R"))
 
 This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(early)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
 
+### How satisfied are you with your participation so far in the working group?
 
+![](graphs/LTER_survey-01_full-wg-first-meeting_satisfaction.png){width="90%" fig-align="center"}
 
+\newpage
 
+### Based on your experience at your first meeting, please briefly describe what products or outcomes you expect your group to produce over the course of the project.
 
+```{r expected-products}
+#| echo: false
+# Extract free text responses
+pull_text(df = early, text = "expected_products_text")
+```
 
+\newpage
 
+### Please describe the unique skills, knowledge, and/or perspectives you possess that you expect to use to help complete this group project.
 
+```{r unique-skills}
+#| echo: false
+pull_text(df = early, text = "unique_skills_text")
+```
 
+\newpage
 
+### How important is it to you to gain the following potential benefits through participation in the working group?
 
+Responses of "Extremely Important"
 
+![](graphs/LTER_survey-01_full-wg-first-meeting_benefits.png){width="90%" fig-align="center"}
 
+> Un-Abbreviated Axis Explanation
 
+| | |
+|:---|:---|
+| The opportunity to have others' ideas enhance my work | Building/expanding a professional network |
+| The chance to participate in group problem solving | The opportunity to gain deeper understanding of other disciplines |
+| Authorship on academic publications or reports | Acquiring new areas of expertise |
+| The chance to solve complex problems more quickly | Acquiring new technical or analytic skills |
+| Receiving mentorship from more senior colleagues | Access to datasets |
+| Opportunities to participate in public communication about the project | Leadership opportunities |
+| Providing mentorship to more junior colleagues | Authorship on derived datasets or analytic software |
+| Understanding people, cultures and forms of knowledge that are new to me | Better understanding the importance and techniques for safeguarding sensitive data and knowledge systems |
+| Opportunities to co-create science with end users and decision makers | |
 
+#### Entries for "other benefits"
 
+```{r benefits-other}
+#| echo: false
+pull_text(df = early, text = "benefits_other_text")
+```
 
+\newpage
 
+### What do you forsee as the greatest challenges facing your working group?
 
+Response of "Very Serious Challenge" and "Serious Challenge"
 
+![](graphs/LTER_survey-01_full-wg-first-meeting_challenges.png){width="90%" fig-align="center"}
 
+> Un-Abbreviated Axis Explanation
 
+| | |
+|:---|:---|
+| Lack of researcher time to work on the project | Some data unavailable and/or of poor quality |
+| Data incompatibility | Maintaining communication between working group members |
+| Public communication of results or outcomes of project | Developing a shared vocabulary |
+| Lack of non-scientific expertise, such as communication, design, arbitration, legal, religious | Working group members' divergent ideas and goals |
+| Lack of experience with different communities | Institutional interest in applying the results of the working group |
+| Funding to carry the project forward after the working group ends | I do not feel safe and/or supported expressing my views |
+| Assumptions in the original proposal or questions that have not been appropriately addressed | |
 
+### Can you identify types of training or professional development that would help you contribute more successfully to the project? If so, please describe.
 
-
-
-
-
-
-
-
-
-
-
+```{r desired-training}
+#| echo: false
+pull_text(df = early, text = "desired_training_text")
+```

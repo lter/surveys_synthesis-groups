@@ -17,7 +17,25 @@ source(file.path("tools", "pull_text.R"))
 
 This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(end)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
 
+### How satisfied are you overall with your participation in the working group?
 
+![](graphs/LTER_survey-03_full-wg-end_satisfaction.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you have suggestions regarding things that could be done to increase your satisfaction with participation in the working group? If so, please share them here.
+
+```{r satisfaction-suggestions}
+#| echo: false
+# Extract free text responses
+pull_text(df = end, text = "satisfaction_suggestion_text")
+```
+
+\newpage
+
+### Based on your experience with this working group, would you be interested in participating in a future LTER synthesis working group?
+
+![](graphs/LTER_survey-03_full-wg-end_future-interest-self.png){width="90%" fig-align="center"}
 
 
 

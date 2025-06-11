@@ -9,7 +9,7 @@ engine: knitr
 #| include: false
 
 # Read in the data
-end <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_end.csv"))
+end <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_full_end.csv"))
 
 # Load needed custom function(s)
 source(file.path("tools", "pull_text.R"))

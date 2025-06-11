@@ -12,7 +12,7 @@ engine: knitr
 library(tidyverse)
 
 # Read in the data
-mid <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_mid-point.csv"))
+mid <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_full_mid-point.csv"))
 
 # Load needed custom function(s)
 source(file.path("tools", "pull_text.R"))
@@ -71,46 +71,36 @@ Responses of "Great Benefit"
 | Understanding people, cultures and forms of knowledge that are new to me | Better understanding the importance and techniques for safeguarding sensitive data and knowledge systems |
 | Opportunities to co-create science with end users and decision makers | |
 
+#### Entries for "other benefits"
 
+```{r benefits-other-text}
+#| echo: false
+pull_text(df = mid, text = "benefits_other_text")
+```
 
+\newpage
 
+### Every working group faces challenges in pursuing its work plan. From your perspective, what are the important challenges that your working group has **already overcome**? [emphasis in survey]
 
+```{r challenges-overcome}
+#| echo: false
+pull_text(df = mid, text = "challenges_overcome") 
+```
 
+\newpage
 
+### What do you see as the most important **remaining challenges** your working group faces? [emphasis in survey]
 
+```{r challenges-remaining}
+#| echo: false
+pull_text(df = mid, text = "challenges_remaining") 
+```
 
+\newpage
 
+### If you have general comments or feedback about the survey, the working group, or additional information you would like to share anonymously before you complete the survey, please enter it here. If you require timely action or response, please directly contact the staff of the sponsoring program (NCEAS or LTER).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```{r feedback}
+#| echo: false
+pull_text(df = mid, text = "feedback_text") 
+```

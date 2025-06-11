@@ -30,7 +30,9 @@ pull_text <- function(df = NULL, text = NULL){
     # Now reverse it
     rev() %>% 
     # Wrap text
-    base::strwrap(x = .)
+    base::strwrap(x = .) %>% 
+    # Drop empty characters
+    setdiff(x = ., y = c(""))
   
   # If there are any responses, return them
   if(length(words) >= 1){

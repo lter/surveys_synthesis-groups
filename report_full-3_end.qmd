@@ -8,6 +8,9 @@ engine: knitr
 ```{r setup}
 #| include: false
 
+# Load needed libraries
+library(tidyverse)
+
 # Read in the data
 end <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_full_end.csv"))
 
@@ -37,34 +40,107 @@ pull_text(df = end, text = "satisfaction_suggestion_text")
 
 ![](graphs/LTER_survey-03_full-wg-end_future-interest-self.png){width="90%" fig-align="center"}
 
+\newpage
 
+### How likely are you to encourage a colleague to participate in a future LTER synthesis working group?
 
+![](graphs/LTER_survey-03_full-wg-end_future-encourage-peer.png){width="90%" fig-align="center"}
 
+\newpage
 
+### As part of the survey you completed during your first meeting, you described your expectations regarding the working group's research products or other outcomes. To what degree have your expecations changed or evolved since that first meeting?
 
+![](graphs/LTER_survey-03_full-wg-end_expectations-evolve.png){width="90%" fig-align="center"}
 
+\newpage
 
+### Please describe briefly how your ideas regarding what to expect of a synthesis working group have changed or evolved.
 
+```{r expectations-evolve-text}
+#| echo: false
+pull_text(df = end, text = "expectations_evolve_text")
+```
 
+\newpage
 
+### Did your working group achieve important outcomes that were unexpected? Please describe these unexpected outcomes. What factors led to the production of each unexpected outcome?
 
+```{r unexpected-outcome-text}
+#| echo: false
+pull_text(df = end, text = "unexpected_outcome_text")
+```
 
+\newpage
 
+### From your perspective, to what degree did your working group's project make use of the unique skills, knowledge and perspectives that you brought to the group?
 
+![](graphs/LTER_survey-03_full-wg-end_asset-used.png){width="90%" fig-align="center"}
 
+\newpage
 
+### To what degree have you experienced the following benefits through your participation in the working group?
 
+Responses of "Great Benefit"
 
+![](graphs/LTER_survey-03_full-wg-end_benefits.png){width="90%" fig-align="center"}
 
+> Un-Abbreviated Axis Explanation
 
+| | |
+|:---|:---|
+| The opportunity to have others' ideas enhance my work | Building/expanding a professional network |
+| The chance to participate in group problem solving | The opportunity to gain deeper understanding of other disciplines |
+| Authorship on academic publications or reports | Acquiring new areas of expertise |
+| The chance to solve complex problems more quickly | Acquiring new technical or analytic skills |
+| Receiving mentorship from more senior colleagues | Access to datasets |
+| Opportunities to participate in public communication about the project | Leadership opportunities |
+| Providing mentorship to more junior colleagues | Authorship on derived datasets or analytic software |
+| Understanding people, cultures and forms of knowledge that are new to me | Better understanding the importance and techniques for safeguarding sensitive data and knowledge systems |
+| Opportunities to co-create science with end users and decision makers | |
 
+\newpage
 
+### Every working group faces challenges in pursuing its work plan. From your perspective, what are the important challenges that your working group **overcame** during the project? [emphasis added *post hoc*]
 
+```{r challenges-overcome}
+#| echo: false
+pull_text(df = end, text = "challenges_overcome_text")
+```
 
+\newpage
 
+### From your perspective, were there any important challenges that your working group was **not able to overcome**? If so, please describe them here. \[emphasis added _post hoc_\]
 
+```{r challenges-not-overcome}
+#| echo: false
+pull_text(df = end, text = "challenges_not_overcome_text")
+```
 
+\newpage
 
+### What kinds of support were most helpful in achieving the expected outcomes or overcoming challenges?
 
+Note that the new variant uses the above phrasing while the old variant asked respondents for four specific unmet expectations and then asked how helpful these support categories would have been in meeting those goals.
 
+Answers of "Helped Significantly"
 
+![](graphs/LTER_survey-03_full-wg-end_support-value.png){width="90%" fig-align="center"}
+
+> Un-Abbreviated Axis Explanation
+
+| | |
+|:---|:---|
+| Preparing data for analysis | Identifying and/or acquiring relevant data |
+| Developing a workflow | Facilitating communication in between in-person meetings |
+| Building and facilitating collaboration and teamwork | Structuring and planning for in-person meetings |
+| Identifying potential working group participants | Identifying analytic approaches |
+| Communicating about the outcomes of your group's work | |
+
+\newpage
+
+### If you have comments or feedback about the survey, or additional information you would like to share at this time, please enter them here.
+
+```{r feedback}
+#| echo: false
+pull_text(df = end, text = "feedback_text") 
+```

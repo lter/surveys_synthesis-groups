@@ -8,6 +8,9 @@ engine: knitr
 ```{r setup}
 #| include: false
 
+# Load needed libraries
+library(tidyverse)
+
 # Read in the data
 sparc <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_sparc.csv"))
 
@@ -17,36 +20,119 @@ source(file.path("tools", "pull_text.R"))
 
 This report reflects survey data as of **`r Sys.Date()`**; there are currently **`r nrow(sparc)`** participants who participated in any version of this survey. Note that missing values are excluded from each graph so the total response count might vary among questions.
 
+### How satisfied are you overall with your participation in the working group?
+
+![](graphs/LTER_survey-01B_sparc_satisfaction.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Do you have suggestions regarding things that could be done to increase your satisfaction with participation in the working group? If so, please share them here.
+
+```{r satisfaction-suggestions}
+#| echo: false
+# Extract free text responses
+pull_text(df = sparc, text = "satisfaction_suggestion_text")
+```
+
+\newpage
+
+### Based on your experience with this working group, would you be interested in participating in a future full synthesis working group (\~3 meetings over 2 years)?
+
+![](graphs/LTER_survey-01B_sparc_future-interest-self.png){width="90%" fig-align="center"}
+
+\newpage
+
+### How likely are you to encourage a colleague to participate in a future SPARC working group?
+
+![](graphs/LTER_survey-01B_sparc_future-encourage-peer.png){width="90%" fig-align="center"}
+
+\newpage
+
+### Did your working group achieve important outcomes that were unexpected? Please describe these unexpected outcomes. What factors led to the production of each unexpected outcome?
+
+```{r unexpected-outcome-text}
+#| echo: false
+pull_text(df = sparc, text = "outcomes_achieved")
+```
+
+\newpage
+
+### To what degree have you experienced the following benefits through your participation in the SPARC group?
+
+Responses of "Great Benefit"
+
+![](graphs/LTER_survey-01B_sparc_benefits.png){width="90%" fig-align="center"}
+
+> Un-Abbreviated Axis Explanation
+
+| | |
+|:---|:---|
+| The opportunity to have others' ideas enhance my work | Building/expanding a professional network |
+| The chance to participate in group problem solving | The opportunity to gain deeper understanding of other disciplines |
+| Authorship on academic publications or reports | Acquiring new areas of expertise |
+| The chance to solve complex problems more quickly | Acquiring new technical or analytic skills |
+| Receiving mentorship from more senior colleagues | Access to datasets |
+| Opportunities to participate in public communication about the project | Leadership opportunities |
+| Providing mentorship to more junior colleagues | Authorship on derived datasets or analytic software |
+| Understanding people, cultures and forms of knowledge that are new to me | Better understanding the importance and techniques for safeguarding sensitive data and knowledge systems |
+| Opportunities to co-create science with end users and decision makers | |
+
+\newpage
+
+### Over the course of this ~1-year project, how much time do you estimate you have spent on the following types of activities?
+
+![](graphs/LTER_survey-01B_sparc_time-spent.png){width="90%" fig-align="center"}
+
+> Un-Abbreviated Axis Explanation
+
+| | |
+|:---|:---|
+| Data preparation | Data analysis |
+| Preparing data for archiving | Communication with team between face-to-face meetings (e.g., email, virtual meetings) |
+| Manuscript writing | Public communication about working group progress and/or results |
+
+\newpage
+
+### Every working group faces challenges in pursuing its work plan. From your perspective, what are the important challenges that your working group **overcame** during the project? [emphasis added *post hoc*]
+
+```{r challenges-overcome}
+#| echo: false
+pull_text(df = sparc, text = "challenges_overcome")
+```
+
+\newpage
+
+### From your perspective, were there any important challenges that your working group was **not able to overcome**? If so, please describe them here. [emphasis added *post hoc*]
+
+```{r challenges-not-overcome}
+#| echo: false
+pull_text(df = sparc, text = "challenges_not_overcome")
+```
+
+\newpage
+
+### What kinds of support were most helpful in achieving the expected outcomes or overcoming challenges?
+
+Answers of "Helped Significantly"
 
 
+![](graphs/LTER_survey-01B_sparc_support-value.png){width="90%" fig-align="center"}
 
+> Un-Abbreviated Axis Explanation
 
+| | |
+|:---|:---|
+| Preparing data for analysis | Identifying and/or acquiring relevant data |
+| Developing a workflow | Facilitating communication in between in-person meetings |
+| Building and facilitating collaboration and teamwork | Structuring and planning for in-person meetings |
+| Identifying potential working group participants | Identifying analytic approaches |
+| Communicating about the outcomes of your group's work | |
 
+\newpage
 
+### If you have comments or feedback about the survey, or additional information you would like to share at this time, please enter them here.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```{r feedback}
+#| echo: false
+pull_text(df = sparc, text = "feedback_text")
+```

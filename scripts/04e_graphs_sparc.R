@@ -267,7 +267,7 @@ sparc_sub <- multi_cat_prep(df = sparc, q_stem = "time_spent_", grp = "cohort",
 ggplot(sparc_sub, aes(y = reorder(question, -perc_resp), x = perc_resp, 
                       fill = answer, color = "x")) +
   geom_bar(stat = "identity") +
-  labs(x = "Number of Responses") +
+  labs(x = "Percent of Responses") +
   facet_wrap(cohort ~ ., axes = "all_x") +
   scale_fill_manual(values =  sub_cols) +
   scale_color_manual(values = "#000") +

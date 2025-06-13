@@ -248,16 +248,9 @@ sub_cols <- c("Less than 30 min/month" = "#eae2b7",
               "2-6 hr/month" = "#f77f00",
               "More than 6 hr/month" = "#d62828")
 
-# Prepare the data for plotting
-sparc_sub <- sparc %>% 
-  # Pare down to desired columns only
-  dplyr::select(cohort, dplyr::contains("time_spent")) %>% 
-  # Pivot to long format
-  tidyr::pivot_longer(cols = -cohort, names_to = 'question', values_to = 'answer') %>%
-  # Filter out non-responses (i.e., NAs)
-  dplyr::filter(!is.na(answer) & nchar(as.character(answer)) != 0) %>%
-  # Drop unwanted 'other benefit' column
-  dplyr::filter(stringr::str_detect(string = question, pattern = "time_spent_other") != T) %>% 
+# Prepare the data for graphing
+sparc_sub <- multi_cat_prep(df = sparc, q_stem = "time_spent_", grp = "cohort", 
+                            excl_qs = c("time_spent_other", "time_spent_other_text")) %>% 
   # Make better-formatted text (for graph axis marks)
   dplyr::mutate(question = dplyr::case_when(
     question == "time_spent_analysis" ~ "Analysis",
@@ -266,30 +259,12 @@ sparc_sub <- sparc %>%
     question == "time_spent_comm_public" ~ "Communicating with Public",
     question == "time_spent_data_prep" ~ "Preparing Data",
     question == "time_spent_writing" ~ "Writing",
-    T ~ question))
-
-# Make a list for storing outputs
-sparc_list <- list()
-
-# Iterate across questions
-for(focal_q in sort(unique(sparc_sub$question))){
-  
-  # Subset to just this question
-  sparc_list[[focal_q]] <- sparc_sub %>% 
-    dplyr::filter(question == focal_q) %>% 
-    # Prepare for survey graphing
-    survey_prep(df = ., resp = "answer", grp = "cohort") %>% 
-    # Add the question back in
-    dplyr::mutate(question = focal_q)
-  
-}
-
-# Unlist the list
-sparc_sub2 <- purrr::list_rbind(x = sparc_list) %>% 
+    T ~ question)) %>% 
+  # Determine order of answers
   dplyr::mutate(answer = factor(answer, levels = names(sub_cols)))
 
 # Make desired graph
-ggplot(sparc_sub2, aes(y = reorder(question, -perc_resp), x = perc_resp, 
+ggplot(sparc_sub, aes(y = reorder(question, -perc_resp), x = perc_resp, 
                       fill = answer, color = "x")) +
   geom_bar(stat = "identity") +
   labs(x = "Number of Responses") +
@@ -315,7 +290,6 @@ ggplot(sparc_sub2, aes(y = reorder(question, -perc_resp), x = perc_resp,
 ggsave(filename = file.path("graphs", plotname), width = 6, height = 3, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
-rm(list = c("sparc_sub", "plotname", "sparc_list",
-            "sparc_sub2", "focal_q", "sub_cols")); gc()
+rm(list = c("sparc_sub", "plotname", "sub_cols")); gc()
 
 # End ----

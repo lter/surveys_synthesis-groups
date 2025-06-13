@@ -73,21 +73,16 @@ rm(list = c("early_sub", "plotname", "sub_cols")); gc()
 # Benefits ----
 ## ------------------------------------- ##
 
+# Define desired category order and colors
+sub_cols <- c("Extremely important" = "#013a63", 
+              "Very important" = "#014f86",    
+              "Moderately important" = "#2c7da0", 
+              "Slightly important" = "#61a5c2", 
+              "Not important" = "#a9d6e5")
+
 # Prepare the data for plotting
-early_sub <- early %>% 
-  # Pare down to desired columns only
-  dplyr::select(cohort, dplyr::contains("benefits")) %>% 
-  # Pivot to long format
-  tidyr::pivot_longer(cols = -cohort, names_to = 'question', values_to = 'answer') %>%
-  # Filter out non-responses (i.e., NAs)
-  dplyr::filter(!is.na(answer) & nchar(as.character(answer)) != 0) %>%
-  # Filter to only desired answer levels
-  dplyr::filter(answer %in% c("Extremely important" #, "Very important"
-                              )) %>%
-  # Drop unwanted 'other benefit' column
-  dplyr::filter(!question %in% c("benefits_other")) %>% 
-  # Prepare for survey creation
-  survey_prep(df = ., resp = "question", grp = "cohort") %>% 
+early_sub <- multi_cat_prep(df = early, q_stem = "benefits", grp = "cohort", 
+                            excl_qs = c("benefits_other", "benefits_other_text")) %>%
   # Make better-formatted text (for graph axis marks)
   dplyr::mutate(question = dplyr::case_when(
     question == "benefits_access_data" ~ "Access Data",
@@ -108,23 +103,37 @@ early_sub <- early %>%
     question == "benefits_solve_group" ~ "Problem Solve as a Group",
     question == "benefits_solve_quick" ~ "Quickly Problem Solve",
     T ~ question)) %>% 
-  # Reorder factor level
-  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort)))))
+  # Reorder factor levels
+  dplyr::mutate(cohort = factor(cohort, levels = rev(sort(unique(.$cohort))))) %>% 
+  dplyr::mutate(answer = factor(answer, levels = names(sub_cols)))
 
 # Make desired graph
-plot_across_cohorts(df = early_sub, resp = "question", facet = T,
-                    colors = c("#013a63", "#01497c", "#014f86", 
-                               "#2a6f97", "#2c7da0", "#468faf",
-                               "#61a5c2", "#89c2d9", "#a9d6e5"))
+  ggplot(early_sub, aes(y = reorder(question, -perc_resp), x = perc_resp, 
+                        fill = answer, color = "x")) +
+    geom_bar(stat = "identity") +
+    labs(x = "Percent of Responses") +
+    facet_wrap(cohort ~ ., axes = "all_x") +
+    scale_fill_manual(values =  sub_cols) +
+    scale_color_manual(values = "#000") +
+    guides(color = "none") +
+    theme_bw() + 
+    theme(legend.position = "right",
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          strip.text = element_text(size = 14),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 8),
+          axis.title.x = element_text(size = 16),
+          axis.title.y = element_blank())
 
 # Generate nice file name
 (plotname <- paste0(filestem, "benefits", ".png"))
 
 # Export the graph
-ggsave(filename = file.path("graphs", plotname), width = 6, height = 6, units = "in")
+ggsave(filename = file.path("graphs", plotname), width = 10, height = 6, units = "in")
 
 # Remove some things from the environment to avoid 'wrong data' errors
-rm(list = c("early_sub", "plotname")); gc()
+rm(list = c("early_sub", "plotname", "sub_cols")); gc()
 
 ## ------------------------------------- ##
 # Challenges ----

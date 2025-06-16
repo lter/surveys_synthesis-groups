@@ -108,23 +108,23 @@ early_sub <- multi_cat_prep(df = early, q_stem = "benefits", grp = "cohort",
   dplyr::mutate(answer = factor(answer, levels = names(sub_cols)))
 
 # Make desired graph
-  ggplot(early_sub, aes(y = reorder(question, -perc_resp), x = perc_resp, 
-                        fill = answer, color = "x")) +
-    geom_bar(stat = "identity") +
-    labs(x = "Percent of Responses") +
-    facet_wrap(cohort ~ ., axes = "all_x") +
-    scale_fill_manual(values =  sub_cols) +
-    scale_color_manual(values = "#000") +
-    guides(color = "none") +
-    theme_bw() + 
-    theme(legend.position = "right",
-          legend.title = element_blank(),
-          legend.background = element_blank(),
-          strip.text = element_text(size = 14),
-          axis.text.x = element_text(size = 14),
-          axis.text.y = element_text(size = 8),
-          axis.title.x = element_text(size = 16),
-          axis.title.y = element_blank())
+ggplot(early_sub, aes(y = reorder(question, perc_resp),
+                      x = perc_resp, fill = answer, color = "x")) +
+  geom_bar(stat = "identity") +
+  labs(x = "Percent of Responses") +
+  facet_wrap(cohort ~ ., axes = "all_x") +
+  scale_fill_manual(values =  sub_cols) +
+  scale_color_manual(values = "#000") +
+  guides(color = "none") +
+  theme_bw() + 
+  theme(legend.position = "right",
+        legend.title = element_blank(),
+        legend.background = element_blank(),
+        strip.text = element_text(size = 14),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 8),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_blank())
 
 # Generate nice file name
 (plotname <- paste0(filestem, "benefits", ".png"))

@@ -15,13 +15,9 @@ multi_cat_prep <- function(df = NULL, q_stem = NULL, grp = "cohort", excl_qs = N
   if(is.null(df) || "data.frame" %in% class(df) != TRUE)
     stop("'df' must be provided and be data.frame-like")
   
-  # Errors for 'resp'
+  # Errors for 'q_stem'
   if(is.null(q_stem) || is.character(q_stem) != TRUE || length(q_stem) != 1 || any(stringr::str_detect(string = names(df), pattern = q_stem)) != T)
     stop("'q_stem' must be a single character value matching some columns found in 'df'")
-  
-  # Errors for 'grp'
-  if(is.null(grp) || is.character(grp) != TRUE || length(grp) != 1 || !grp %in% c("global", "cohort"))
-    stop("'grp' must be one of either 'global' or 'cohort'")
   
   # Handle NULL value for 'excl_qs'
   if(is.null(excl_qs)){ excl_qs <- "NOTHING" }

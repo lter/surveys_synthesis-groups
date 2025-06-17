@@ -204,7 +204,7 @@ for(focal_benefit in names(sub_cols)){
           axis.title = element_text(size = 16))
   
   # Generate nice file name
-  benefit_tidy <- tolower(gsub(" ", "-", focal_benefit))
+  benefit_tidy <- tolower(gsub(" |'", "-", focal_benefit))
   plotname <- paste0(filestem, "benefits_", benefit_tidy, ".png")
 
   # Export the graph

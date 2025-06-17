@@ -1,10 +1,10 @@
 #' @title Summarize Survey Data for a Specific Question
 #' 
-#' @description Virtually all report graphs use participants per cohort or % responses per cohort. This function does that summarization quickly and (more or less) easily.
+#' @description Virtually all report graphs use number responses per cohort or % responses per cohort. This function does that summarization quickly and (more or less) easily.
 #' 
 #' @param df (data.frame-like) Full survey data
 #' @param resp (character) Single column name in 'df' corresponding to the question for which summarization is desired
-#' @param grp (character) One of either "global" or "cohort" for the desired level of summarization
+#' @param grp (character) One of "global", "cohort", or "cohort-survey" for the desired level of summarization
 #'
 #' @return (data.frame) Summarized dataframe of responses within the specified grouping structure
 #' 
@@ -19,8 +19,8 @@ survey_prep <- function(df = NULL, resp = NULL, grp = "cohort"){
     stop("'resp' must be a single column name found in 'df'")
   
   # Errors for 'grp'
-  if(is.null(grp) || is.character(grp) != TRUE || length(grp) != 1 || !grp %in% c("global", "cohort"))
-    stop("'grp' must be one of either 'global' or 'cohort'")
+  if(is.null(grp) || is.character(grp) != TRUE || length(grp) != 1 || !grp %in% c("global", "cohort", "cohort-survey"))
+    stop("'grp' must be one of 'global', 'cohort', or 'cohort-survey'")
   
   # Do prep that applies regardless of 'grp' choice
   df_v2 <- df %>% 
@@ -56,6 +56,29 @@ survey_prep <- function(df = NULL, resp = NULL, grp = "cohort"){
       dplyr::ungroup() %>% 
       # Calculate responses per response category
       dplyr::group_by(cohort, !!rlang::ensym(resp)) %>% 
+      dplyr::summarize(total_particip = dplyr::first(total_particip),
+                       count = dplyr::n(),
+                       .groups = "keep") %>%
+      dplyr::ungroup() %>% 
+      # And calculate percent of responses per that category
+      dplyr::mutate(perc_resp = (count / total_particip) * 100) %>% 
+      # Compute total responses / category (**regardless of cohort**)
+      dplyr::group_by(!!rlang::ensym(resp)) %>% 
+      dplyr::mutate(cat_total = sum(count, na.rm = T)) %>% 
+      dplyr::ungroup()
+    
+  } else if(grp == "cohort-survey"){
+    
+    # Do it    
+    df_v3 <- df_v2 %>% 
+      # Grab relevant column(s)
+      dplyr::select(dplyr::all_of(c("cohort", "survey_type", resp))) %>% 
+      # Calculate total respondents (per cohort)
+      dplyr::group_by(cohort, survey_type) %>% 
+      dplyr::mutate(total_particip = dplyr::n()) %>% 
+      dplyr::ungroup() %>% 
+      # Calculate responses per response category
+      dplyr::group_by(cohort, survey_type, !!rlang::ensym(resp)) %>% 
       dplyr::summarize(total_particip = dplyr::first(total_particip),
                        count = dplyr::n(),
                        .groups = "keep") %>%

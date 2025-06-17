@@ -25,9 +25,11 @@ multi_cat_prep <- function(df = NULL, q_stem = NULL, grp = "cohort", excl_qs = N
   # Do prep that applies regardless of 'grp' choice
   df_v2 <- df %>% 
     # Pare down to desired columns only
-    dplyr::select(cohort, dplyr::contains(q_stem)) %>% 
+    dplyr::select(cohort, survey_type, dplyr::contains(q_stem)) %>% 
     # Pivot to long format
-    tidyr::pivot_longer(cols = -cohort, names_to = 'question', values_to = 'answer') %>%
+    tidyr::pivot_longer(cols = -cohort:-survey_type, 
+                        names_to = 'question', 
+                        values_to = 'answer') %>%
     # Filter out non-responses (i.e., NAs)
     dplyr::filter(!is.na(answer) & nchar(as.character(answer)) != 0) %>% 
     # Drop questions that match 'excl_qs'

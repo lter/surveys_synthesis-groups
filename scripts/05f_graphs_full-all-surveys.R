@@ -38,7 +38,7 @@ dplyr::glimpse(combo)
 purrr::walk(.x = dir(path = "tools"), .f = ~ source(file.path("tools", .x)))
 
 # Assemble a nice file stem for graphs on this survey's data
-filestem <- "LTER_survey-04_full-wg-all-surveys_"
+filestem <- "LTER_survey-01-to-03_full-wg-all-surveys_"
 
 ## ------------------------------------- ##
 # Satisfaction Rating ----

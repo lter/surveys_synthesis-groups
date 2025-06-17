@@ -134,11 +134,96 @@ rm(list = c("combo_sub", "plotname", "sub_cols")); gc()
 ## ------------------------------------- ##
 
 
+
+
+
+
 ## ------------------------------------- ##
 # Benefits ----
 ## ------------------------------------- ##
 
+# Assemble a bunch of nice three-part color vectors for project stage within question
+sub_cols <- list(
+  "Networking" = c("Beginning" = "#ade8f4", "Middle" = "#0096c7", "End" = "#023e8a"),
+  "Others' Ideas" = c("Beginning" = "#e9c46a", "Middle" = "#f4a261", "End" = "#e76f51"),
+  "Group Problem Solving" = c("Beginning" = "#a7c957", "Middle" = "#6a994e", "End" = "#386641"),
+  "Other Disciplines" = c("Beginning" = "#e0aaff", "Middle" = "#9d4edd", "End" = "#5a189a"),
+  "Authoring Papers" = c("Beginning" = "#778da9", "Middle" = "#415a77", "End" = "#1b263b"),
+  "Quick Problem Solving" = c("Beginning" = "#a68a64", "Middle" = "#7f4f24", "End" = "#582f0e"),
+  "Acquiring Expertise" = c("Beginning" = "#b56576", "Middle" = "#6d597a", "End" = "#355070"),
+  "Accessing Data" = c("Beginning" = "#e5383b", "Middle" = "#a4161a", "End" = "#660708")
+  # "" = c("Beginning" = "#", "Middle" = "#", "End" = "#")
+)
 
+# Prepare data for plotting
+combo_sub <- multi_cat_prep(df = combo, q_stem = "benefits_", grp = "cohort-survey") %>% 
+  # Filter to only desired answer levels
+  dplyr::filter(answer %in% c("Extremely important", "Great benefit")) %>% 
+  # Tidy up question text
+  dplyr::mutate(question = dplyr::case_when(
+    question == "benefits_access_data" ~ "Accessing Data",
+    question == "benefits_authorship_data" ~ "Authoring Data",
+    question == "benefits_authorship_papers" ~ "Authoring Papers",
+    question %in% c("benefits_co_create", "benefits_co_create_science") ~ "Co-Creating Knowledge",
+    question == "benefits_communication" ~ "Public Communication",
+    question == "benefits_data_security" ~ "Data Security",
+    question == "benefits_diff_culture" ~ "Understanding Different Cultures",
+    question == "benefits_other_cultures" ~ "Understanding Other Cultures",
+    question == "benefits_expertise" ~ "Acquiring Expertise",
+    question == "benefits_leadership" ~ "Leadership Opportunities",
+    question == "benefits_mentorship_get" ~ "Being a Mentee",
+    question == "benefits_mentorship_give" ~ "Being a Mentor",
+    question == "benefits_network" ~ "Networking",
+    question == "benefits_other_disc" ~ "Other Disciplines",
+    question == "benefits_others_ideas" ~ "Others' Ideas",
+    question == "benefits_skills" ~ "Learning New Skills",
+    question == "benefits_sensitive_data" ~ "Sensitive Data",
+    question == "benefits_solve_group" ~ "Group Problem Solving",
+    question == "benefits_solve_quick" ~ "Quick Problem Solving",
+    T ~ question))
+
+# Which questions are we excluding (for now)?
+supportR::diff_check(old = unique(combo_sub$question), new = names(sub_cols))
+
+# Iterate across questions
+for(focal_benefit in names(sub_cols)){
+  
+  # Progress message
+  message("Generating graph for perceived benefits of: ", focal_benefit)
+  
+  # Subset to one specific sub-question
+  combo_sub2 <- dplyr::filter(combo_sub, question == focal_benefit)
+    
+  # Create desired plot
+  ggplot(data = combo_sub2, aes(x = survey_type, y = perc_resp, 
+                                fill = survey_type, color = "x")) +
+    geom_bar(stat = "identity") +
+    facet_wrap(cohort ~ .) +
+    labs(x = "Project Stage", y = "Percent of Responses (%)", 
+         title = paste0("Import of: ", focal_benefit)) +
+    scale_fill_manual(values = sub_cols[[focal_benefit]]) +
+    scale_color_manual(values = "#000") +
+    guides(color = "none") +
+    # Custom theme elements
+    theme_bw() + 
+    theme(legend.position = "none",
+          legend.title = element_blank(),
+          legend.background = element_blank(),
+          strip.text = element_text(size = 14),
+          text = element_text(size = 14),
+          axis.title = element_text(size = 16))
+  
+  # Generate nice file name
+  benefit_tidy <- tolower(gsub(" ", "-", focal_benefit))
+  plotname <- paste0(filestem, "benefits_", benefit_tidy, ".png")
+
+  # Export the graph
+  ggsave(filename = file.path("graphs", plotname), width = 7, height = 5, units = "in")
+  
+} # Close loop
+
+# Remove some things from the environment to avoid 'wrong data' errors
+rm(list = c("combo_sub", "combo_sub2", "plotname", "sub_cols")); gc()
 
 ## ------------------------------------- ##
 # Challenges ----

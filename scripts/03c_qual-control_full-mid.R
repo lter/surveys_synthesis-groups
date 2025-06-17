@@ -174,7 +174,7 @@ dplyr::glimpse(mid_v4)
 # Reorder the columns sensibly
 mid_v5 <- mid_v4 %>%
   dplyr::select(survey_iteration, survey_type, start_date, end_date,
-                program, cohort, synthesis_group, attendance_mode, 
+                program, cohort, synthesis_group, dplyr::starts_with("attendance_mtg_"), 
                 expectations_evolve:challenges_remaining,
                 dplyr::starts_with("time_"),
                 dplyr::starts_with("benefits_"),

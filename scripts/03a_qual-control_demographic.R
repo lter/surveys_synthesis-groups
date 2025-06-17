@@ -218,7 +218,7 @@ demo_v7 <- demo_v6 %>%
     # Survey metadata
     survey_iteration, survey_type, start_date:end_date, 
     # Group information
-    program, synthesis_group, attendance_mode,
+    program, synthesis_group, 
     # Demographics
     gender, sexuality, race, latinx, disability,
     caregiving, socio_economics, family_educ, self_educ, first_gen,

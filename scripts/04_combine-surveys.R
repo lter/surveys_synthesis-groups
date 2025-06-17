@@ -23,7 +23,8 @@ rm(list = ls()); gc()
 ## ------------------------------------- ##
 
 # Read in all tidy data
-combo_v1 <- purrr::map(.x = dir(path = file.path("data", "tidy")),
+combo_v1 <- purrr::map(.x = setdiff(dir(path = file.path("data", "tidy")),
+                                    "wg-survey-tidy_full_all-three-surveys.csv"),
                        .f = ~ read.csv(file.path("data", "tidy", .x))) %>% 
   # Collapse into a df
   purrr::list_rbind(x = .) %>% 
@@ -42,9 +43,7 @@ dplyr::glimpse(combo_v1)
 combo_v2 <- combo_v1 %>% 
   dplyr::select(survey_iteration:synthesis_group,
                 satisfaction_rating, expectations_evolve,
-                dplyr::starts_with("attendance_mtg_"),
-                dplyr::starts_with("benefits_"),
-                dplyr::starts_with("challenge_")) %>% 
+                dplyr::starts_with("benefits_")) %>% 
   # And drop free text answers
   dplyr::select(-dplyr::ends_with(c("_other", "other_text")))
   

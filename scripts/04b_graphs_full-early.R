@@ -38,7 +38,7 @@ filestem <- "LTER_survey-01_full-wg-first-meeting_"
 ## ------------------------------------- ##
 
 # Define desired category order and colors
-sort(unique(early$satisfaction_so_far))
+sort(unique(early$satisfaction_rating))
 sub_cols <- c("Extremely satisfied" = "#001219",
               "Moderately satisfied" = "#005f73",
               "Somewhat satisfied" = "#0a9396",
@@ -50,12 +50,12 @@ sub_cols <- c("Extremely satisfied" = "#001219",
               "Extremely dissatisfied" = "#9b2226")
 
 # Prepare the data for plotting
-early_sub <- survey_prep(df = early, resp = "satisfaction_so_far", grp = "cohort") %>% 
-  dplyr::mutate(satisfaction_so_far = factor(satisfaction_so_far, levels = names(sub_cols))) %>% 
+early_sub <- survey_prep(df = early, resp = "satisfaction_rating", grp = "cohort") %>% 
+  dplyr::mutate(satisfaction_rating = factor(satisfaction_rating, levels = names(sub_cols))) %>% 
   dplyr::mutate(cohort = factor(cohort, levels = sort(unique(cohort))))
 
 # Make desired graph
-plot_stack_perc(df = early_sub, resp = "satisfaction_so_far", colors = sub_cols, 
+plot_stack_perc(df = early_sub, resp = "satisfaction_rating", colors = sub_cols, 
                 hline_int = 25, hline_col = "gray80", 
                 total_y = 90, total_col = "#fff") +
   guides(fill = guide_legend(nrow = 2))

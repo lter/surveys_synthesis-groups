@@ -163,12 +163,12 @@ early_v4 <- early_v3c %>%
   # Pivot challenges back to wide format
   tidyr::pivot_wider(names_from = time_qs, values_from = time_as) %>% 
   # Standardize 'satisfaction so far' entries
-  dplyr::mutate(satisfaction_so_far = dplyr::case_when(
-    # satisfaction_so_far %in% c() ~ ~ "",
-    T ~ satisfaction_so_far))
+  dplyr::mutate(satisfaction_rating = dplyr::case_when(
+    # satisfaction_rating %in% c() ~ ~ "",
+    T ~ satisfaction_rating))
 
 # Check unique values
-supportR::count(early_v4$satisfaction_so_far)
+supportR::count(early_v4$satisfaction_rating)
 
 # Check structure
 dplyr::glimpse(early_v4)

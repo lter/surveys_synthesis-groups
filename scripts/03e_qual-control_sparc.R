@@ -174,7 +174,7 @@ dplyr::glimpse(sparc_v3)
 
 # Reorder the columns sensibly
 sparc_v4 <- sparc_v3 %>%
-  dplyr::select(survey_iteration, start_date, end_date,
+  dplyr::select(survey_iteration, survey_type, start_date, end_date,
                 program, cohort, synthesis_group, attendance_mode, 
                 dplyr::starts_with("future_sparc_"),
                 anticipate_continuing_wg_research,

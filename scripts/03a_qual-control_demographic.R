@@ -216,7 +216,7 @@ supportR::count_diff(vec1 = demo_v5$latinx, vec2 = demo_v6$latinx)
 demo_v7 <- demo_v6 %>%
   dplyr::select(
     # Survey metadata
-    survey_iteration, start_date:end_date, 
+    survey_iteration, survey_type, start_date:end_date, 
     # Group information
     program, synthesis_group, attendance_mode,
     # Demographics

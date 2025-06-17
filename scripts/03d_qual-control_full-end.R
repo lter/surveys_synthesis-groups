@@ -323,7 +323,7 @@ dplyr::glimpse(end_v4)
 
 # Reorder the columns sensibly
 end_v5 <- end_v4 %>%
-  dplyr::select(survey_iteration, start_date, end_date,
+  dplyr::select(survey_iteration, survey_type, start_date, end_date,
                 program, cohort, synthesis_group, attendance_mode, 
                 dplyr::starts_with("attendance_mtg_"),
                 expectations_evolve:outcomes_unexpected_text,

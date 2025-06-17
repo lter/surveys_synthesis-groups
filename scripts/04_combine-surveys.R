@@ -19,15 +19,51 @@ librarian::shelf(tidyverse, supportR)
 rm(list = ls()); gc()
 
 ## ------------------------------------- ##
-# Initial Wrangling ----
+# Ingest Needed Data ----
 ## ------------------------------------- ##
 
+# Read in all tidy data
+combo_v1 <- purrr::map(.x = dir(path = file.path("data", "tidy")),
+                       .f = ~ read.csv(file.path("data", "tidy", .x))) %>% 
+  # Collapse into a df
+  purrr::list_rbind(x = .) %>% 
+  # Remove SPARC/demographic surveys and any completely empty columns
+  dplyr::filter(!survey_type %in% c("demographic", "sparc")) %>% 
+  dplyr::select(-dplyr::where(fn = ~ all(is.na(.) | nchar(.) == 0)))
 
+# Check structure
+dplyr::glimpse(combo_v1)
 
+## ------------------------------------- ##
+# Streamline Columns ----
+## ------------------------------------- ##
+
+# Pare down to only needed columns
+combo_v2 <- combo_v1 %>% 
+  dplyr::select(survey_iteration:synthesis_group,
+                satisfaction_rating, expectations_evolve,
+                dplyr::starts_with("attendance_mtg_"),
+                dplyr::starts_with("benefits_"),
+                dplyr::starts_with("challenge_")) %>% 
+  # And drop free text answers
+  dplyr::select(-dplyr::ends_with(c("_other", "other_text")))
+  
+# Check what columns are gained/lost
+supportR::diff_check(old = names(combo_v1), new = names(combo_v2))
+
+# Check structure
+dplyr::glimpse(combo_v2)
 
 ## ------------------------------------- ##
 # Export ----
 ## ------------------------------------- ##
+
+# Save a final object
+combo_v99 <- combo_v2
+
+# Export locally
+write.csv(combo_v99, row.names = F, na = '',
+          file = file.path("data", "tidy", "wg-survey-tidy_full_all-three-surveys.csv"))
 
 
 # End ----

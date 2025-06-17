@@ -119,7 +119,9 @@ for(focal_type in unique(key_v1$survey_type)){
     # focal_single <- "1_NCEAS_Synthesis_Group_Survey.csv"
     
     # Grab that element of the list
-    survey_df <- purrr::pluck(.x = list_std, focal_single)
+    survey_df <- purrr::pluck(.x = list_std, focal_single) %>% 
+      # Add a survey type column
+      dplyr::mutate(survey_type = focal_type, .before = dplyr::everything())
     
     # Add to the list for the type
     list_type[[focal_single]] <- survey_df
@@ -146,6 +148,5 @@ for(focal_type in unique(key_v1$survey_type)){
 
 # Check structure of just one survey type dataframe
 dplyr::glimpse(type_df)
-
 
 # End ----

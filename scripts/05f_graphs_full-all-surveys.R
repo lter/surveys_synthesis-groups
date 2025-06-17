@@ -130,15 +130,6 @@ ggsave(filename = file.path("graphs", plotname), width = 10, height = 4, units =
 rm(list = c("combo_sub", "plotname", "sub_cols")); gc()
 
 ## ------------------------------------- ##
-# Attendance ----
-## ------------------------------------- ##
-
-
-
-
-
-
-## ------------------------------------- ##
 # Benefits ----
 ## ------------------------------------- ##
 
@@ -222,6 +213,16 @@ for(focal_benefit in names(sub_cols)){
 } # Close loop
 
 # Remove some things from the environment to avoid 'wrong data' errors
-rm(list = c("combo_sub", "combo_sub2", "plotname", "sub_cols")); gc()
+rm(list = c("combo_sub", "combo_sub2", "plotname", "sub_cols",
+            "benefit_tidy", "focal_benefit")); gc()
+
+## ------------------------------------- ##
+# Attendance ----
+## ------------------------------------- ##
+
+
+
+
+
 
 # End ----

@@ -72,11 +72,50 @@ combo_v3 <- combo_v2 %>%
 supportR::count(vec = combo_v3$survey_type)
 
 ## ------------------------------------- ##
+# Tidy 'Attendance' ----
+## ------------------------------------- ##
+
+# Check current attendance entries
+combo_v3 %>% 
+  dplyr::select(dplyr::starts_with("attendance_")) %>% 
+  tidyr::pivot_longer(cols = dplyr::starts_with("attendance_")) %>% 
+  pull(value) %>% 
+  supportR::count(vec = .)
+  
+# Do needed tidying/standardization
+combo_v4 <- combo_v3 %>% 
+  # Make empty cells into true NAs
+  dplyr::mutate(dplyr::across(.cols = dplyr::starts_with("attendance_"),
+                              .fns = ~ ifelse(is.na(.) | nchar(.) == 0,
+                                              yes = NA, no = .))) %>% 
+  # Fill missing 'meeting 3' with 'meeting 4' data
+  dplyr::mutate(attendance_mtg_3 = ifelse(is.na(attendance_mtg_3), 
+                                          yes = attendance_mtg_4,
+                                          no = attendance_mtg_3)) %>% 
+  # Standardize attendance mode entries
+  dplyr::mutate(
+    dplyr::across(.cols = dplyr::starts_with("attendance_"),
+                  .fns = ~ dplyr::case_when(
+                    stringr::str_detect(string = tolower(.), 
+                                        pattern = "in-person") ~ "In-Person",
+                    . %in% c("Virtual", "via videoconference") ~ "Virtual",
+                    stringr::str_detect(string = tolower(.), 
+                                        pattern = "did not participate") ~ "Absent",
+                    T ~ .)) )
+
+# Re-check attendance entries
+combo_v4 %>% 
+  dplyr::select(dplyr::starts_with("attendance_")) %>% 
+  tidyr::pivot_longer(cols = dplyr::starts_with("attendance_")) %>% 
+  pull(value) %>% 
+  supportR::count(vec = .)
+
+## ------------------------------------- ##
 # Export ----
 ## ------------------------------------- ##
 
 # Save a final object
-combo_v99 <- combo_v3
+combo_v99 <- combo_v4
 
 # Export locally
 write.csv(combo_v99, row.names = F, na = '',

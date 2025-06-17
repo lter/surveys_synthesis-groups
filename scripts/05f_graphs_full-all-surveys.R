@@ -225,10 +225,4 @@ for(focal_benefit in names(sub_cols)){
 # Remove some things from the environment to avoid 'wrong data' errors
 rm(list = c("combo_sub", "combo_sub2", "plotname", "sub_cols")); gc()
 
-## ------------------------------------- ##
-# Challenges ----
-## ------------------------------------- ##
-
-
-
 # End ----

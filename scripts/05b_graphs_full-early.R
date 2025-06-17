@@ -96,7 +96,7 @@ early_sub <- early %>%
     question == "benefits_co_create" ~ "Co-Create Knowledge",
     question == "benefits_communication" ~ "Public Communication",
     question == "benefits_data_security" ~ "Data Security",
-    question == "benefits_diff_culture" ~ "Understand Different Cultures",
+    question == "benefits_other_cultures" ~ "Understand Other Cultures",
     question == "benefits_expertise" ~ "Acquire Expertise",
     question == "benefits_leadership" ~ "Leadership Opportunities",
     question == "benefits_mentorship_get" ~ "Be a Mentee",

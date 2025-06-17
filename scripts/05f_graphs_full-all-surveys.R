@@ -220,6 +220,41 @@ rm(list = c("combo_sub", "combo_sub2", "plotname", "sub_cols",
 # Attendance ----
 ## ------------------------------------- ##
 
+# Process data to prepare for graphing
+combo_sub <- combo %>% 
+  # Keep only desired columns
+  dplyr::select(cohort, dplyr::starts_with("attendance_mtg")) %>% 
+  # Fill missing 'meeting 3' with 'meeting 4' data
+  dplyr::mutate(attendance_mtg_3 = ifelse(is.na(attendance_mtg_3), 
+                                          yes = attendance_mtg_4,
+                                          no = attendance_mtg_3)) %>% 
+  # Pivot to long format
+  tidyr::pivot_longer(cols = -cohort, names_to = "meeting", values_to = "attendance") %>% 
+  # Remove empty values
+  dplyr::filter(!is.na(attendance)) %>% 
+  # Drop meeting 4
+  dplyr::filter(meeting != "attendance_mtg_4") %>% 
+  # Standardize entries
+  dplyr::mutate(
+    ## Attendance modes
+    attendance = dplyr::case_when(
+      stringr::str_detect(string = tolower(attendance), 
+                          pattern = "in-person") ~ "In-Person",
+      attendance %in% c("Virtual", "via videoconference") ~ "Virtual",
+      stringr::str_detect(string = tolower(attendance), 
+                          pattern = "did not participate") ~ "Absent",
+      T ~ attendance),
+    ## Meeting number
+    meeting = dplyr::case_when(
+      meeting == "attendance_mtg_1" ~ "First",
+      meeting == "attendance_mtg_2" ~ "Second",
+      meeting == "attendance_mtg_3" ~ "Third") )
+
+# Check 'attendance' entries
+supportR::count(vec = combo_sub$attendance)
+
+# Check structure
+dplyr::glimpse(combo_sub)
 
 
 

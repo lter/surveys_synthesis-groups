@@ -55,15 +55,31 @@ supportR::diff_check(old = names(combo_v1), new = names(combo_v2))
 dplyr::glimpse(combo_v2)
 
 ## ------------------------------------- ##
+# Tidy 'Survey Type' ----
+## ------------------------------------- ##
+
+# Check current survey types
+supportR::count(vec = combo_v2$survey_type)
+
+# Tweak these to be better for graphing
+combo_v3 <- combo_v2 %>% 
+  dplyr::mutate(survey_type = dplyr::case_when(
+    survey_type == "full_first-meeting" ~ "Beginning",
+    survey_type == "full_mid-point" ~ "Middle",
+    survey_type == "full_end" ~ "End"))
+
+# Check resulting survey types
+supportR::count(vec = combo_v3$survey_type)
+
+## ------------------------------------- ##
 # Export ----
 ## ------------------------------------- ##
 
 # Save a final object
-combo_v99 <- combo_v2
+combo_v99 <- combo_v3
 
 # Export locally
 write.csv(combo_v99, row.names = F, na = '',
           file = file.path("data", "tidy", "wg-survey-tidy_full_all-three-surveys.csv"))
-
 
 # End ----

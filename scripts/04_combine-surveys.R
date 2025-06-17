@@ -43,6 +43,7 @@ dplyr::glimpse(combo_v1)
 combo_v2 <- combo_v1 %>% 
   dplyr::select(survey_iteration:synthesis_group,
                 satisfaction_rating, expectations_evolve,
+                dplyr::all_of(paste0("attendance_mtg_", 1:4)),
                 dplyr::starts_with("benefits_")) %>% 
   # And drop free text answers
   dplyr::select(-dplyr::ends_with(c("_other", "other_text")))

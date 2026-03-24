@@ -40,7 +40,8 @@ filestem <- "LTER_survey-00_demographics_"
 # Define desired category order and colors
 sort(unique(demo$gender))
 sub_cols <- c("Male" = "#219ebc", "Female" = "#ffb703", 
-              "Prefer To Self-Identify" = "gray70")
+              "Prefer To Self-Identify" = "gray70",
+              "Prefer Not To Answer" = "#000")
 
 # Prepare the data for plotting
 demo_sub <- survey_prep(df = demo, resp = "gender", grp = "cohort") %>% 
@@ -124,8 +125,9 @@ demo_sub <- demo %>%
 
 # Make desired graph
 plot_across_cohorts(df = demo_sub, resp = "race", facet = T,
-                   colors = c("#662506", "#993404", "#cc4c02", 
-                              "#ec7014", "#fe9929", "#fec44f"))
+  colors = c("#370617", "#6a040f", "#9d0208",
+    "#662506", "#993404", "#cc4c02", 
+    "#ec7014", "#fe9929", "#fec44f"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "race", ".png"))
@@ -197,7 +199,7 @@ rm(list = c("demo_sub", "plotname", "sub_cols")); gc()
 # Caregiving ----
 ## ------------------------------------- ##
 
-# Define desired category order and colors
+# Define desired category order and colors0
 sort(unique(demo$caregiving))
 sub_cols <- c("Not caregiver" = "#335c67",
               "Contributor" = "#fff3b0",
@@ -339,7 +341,7 @@ demo_sub <- survey_prep(df = demo, resp = "personal_thinking_style", grp = "coho
 
 # Make desired graph
 plot_across_cohorts(df = demo_sub, resp = "personal_thinking_style", facet = T,
-                    colors = c("#00441b", "#006d2c", "#2ca25f", 
+                    colors = c("#00441b", "#006d2c", "#2ca25f", "#40916c",
                                "#66c2a4", "#99d8c9", "#ccece6"))
 # Generate nice file name
 (plotname <- paste0(filestem, "personal-thinking-style", ".png"))
@@ -365,7 +367,7 @@ demo_sub <- survey_prep(df = demo, resp = "group_project_approach", grp = "cohor
 # Make desired graph
 plot_across_cohorts(df = demo_sub, resp = "group_project_approach", facet = T,
                     colors = c("#49006a", "#7a0177", "#ae017e", 
-                               "#dd3497", "#f768a1", "#fa9fb5"))
+                               "#dd3497", "#f768a1", "#fa9fb5", "#fae0e4"))
 
 # Generate nice file name
 (plotname <- paste0(filestem, "group-project-approach", ".png"))
@@ -390,7 +392,7 @@ demo_sub <- survey_prep(df = demo, resp = "conflict_strategy", grp = "cohort") %
 
 # Make desired graph
 plot_across_cohorts(df = demo_sub, resp = "conflict_strategy", facet = T,
-                    colors = c("#084081", "#0868ac", "#4eb3d3", 
+                    colors = c("#03045e", "#084081", "#0868ac", "#4eb3d3", 
                                "#7bccc4", "#a8ddb5", "#e0f3db"))
 
 # Generate nice file name
@@ -505,7 +507,7 @@ demo_sub <- demo %>%
 
 # Make desired graph
 plot_across_cohorts(df = demo_sub, resp = "question", facet = T,
-                    colors = c("#7f0000", "#b30000", "#d7301f", 
+                    colors = c("#7f0000", "#b30000", "#c1121f", "#d7301f", 
                                "#ef6548", "#fdd49e", "#fff7ec"))
 
 # Generate nice file name

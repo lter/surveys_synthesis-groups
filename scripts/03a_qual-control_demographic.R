@@ -296,6 +296,9 @@ demo_v8 <- demo_v7 %>%
                            "Flux-Gradient") ~ "2023",
     # 2025
     synthesis_group %in% c("ResilienceandManagement", "CAGED") ~ "2025",
+    # 2026
+    synthesis_group %in% c("Above-Below-Synchrony", "Life After Death", 
+      "Consumer Functional Diversity") ~ "2026",
     T ~ synthesis_group), .before = synthesis_group) %>% 
   # Fill missing progra info too
   dplyr::mutate(program = "LTER") %>% 

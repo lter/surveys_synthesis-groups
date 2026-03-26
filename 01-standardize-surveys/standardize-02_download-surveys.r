@@ -1,7 +1,6 @@
 ## ---------------------------------------------------------- ##
-# Download Post-2020 Survey Data
-## ---------------------------------------------------------- ##
-
+# Download Necessary Inputs
+## ---------------------------------------------------------- ##\
 # Purpose:
 ## Download & anonymize needed survey data from Qualtrics
 
@@ -12,8 +11,8 @@
 # Load libraries
 librarian::shelf(tidyverse, scicomptools, qualtRics)
 
-# Make needed sub-folder(s)
-dir.create(file.path("data", "raw"), showWarnings = F, recursive = T)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Check for active Qualtrics API key
 scicomptools::token_check(api = "qualtrics", secret = TRUE)
@@ -22,7 +21,7 @@ scicomptools::token_check(api = "qualtrics", secret = TRUE)
 rm(list = ls()); gc()
 
 ## ------------------------------------- ##
-# Download & Anonymize Survey Data ----
+# Download Post-2022 Surveys ----
 ## ------------------------------------- ##
 
 # Identify available Qualtrics data
@@ -61,4 +60,20 @@ for(focal_survey in unique(survey_ids$name)){
   # File completion message
   message("Exporting '", focal_survey, "' as '", focal_out, "'") }
 
+  ## ------------------------------------- ##
+  # Download Data Key ----
+  ## ------------------------------------- ##
+  
+  # Identify all files in relevant Drive folder
+  key_drive <- googledrive::drive_ls(googledrive::as_id("https://drive.google.com/drive/u/0/folders/1IDI3xruhkmhq__uXa-p9fCwCDPSM_G9x")) %>% 
+    # Subset to only this file
+    dplyr::filter(name == "synthesis-group-survey_data-key")
+  
+  # Check that
+  key_drive
+  
+  # Download it
+  googledrive::drive_download(file = key_drive$id, overwrite = T, type = "csv",
+                              path = file.path("data", key_drive$name))
+  
 # End ----

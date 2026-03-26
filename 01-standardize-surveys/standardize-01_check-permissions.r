@@ -1,7 +1,6 @@
 ## ---------------------------------------------------------- ##
 # Prepare for Running 'Actual' Workflow Scripts
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Download needed survey data & make sure needed accesses are working as needed
 
@@ -12,9 +11,8 @@
 # Load libraries
 librarian::shelf(tidyverse, scicomptools, qualtRics, googledrive)
 
-# Make needed folder(s)
-dir.create(file.path("data"), showWarnings = F)
-dir.create(file.path("data", "raw"), showWarnings = F)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()

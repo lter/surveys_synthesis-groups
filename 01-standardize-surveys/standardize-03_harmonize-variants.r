@@ -1,7 +1,6 @@
 ## ---------------------------------------------------------- ##
 # Harmonize Pre/Post-2020 Survey Variants
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Use a data key to standardize column names between pre/post 2020 survey variants
 
@@ -12,27 +11,15 @@
 # Load libraries
 librarian::shelf(tidyverse, googledrive, ltertools)
 
-# Make needed sub-folder(s)
-dir.create(file.path("data", "standardized"), showWarnings = F, recursive = T)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()
 
 ## ------------------------------------- ##
-# Download Data Key ----
+# Prepare Key ----
 ## ------------------------------------- ##
-
-# Identify all files in relevant Drive folder
-key_drive <- googledrive::drive_ls(googledrive::as_id("https://drive.google.com/drive/u/0/folders/1IDI3xruhkmhq__uXa-p9fCwCDPSM_G9x")) %>% 
-  # Subset to only this file
-  dplyr::filter(name == "synthesis-group-survey_data-key")
-
-# Check that
-key_drive
-
-# Download it
-googledrive::drive_download(file = key_drive$id, overwrite = T, type = "csv",
-                            path = file.path("data", key_drive$name))
 
 # Read it in and prepare it
 key_v1 <- read.csv(file = file.path("data", "synthesis-group-survey_data-key.csv"))

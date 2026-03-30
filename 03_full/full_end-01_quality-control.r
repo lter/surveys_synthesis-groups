@@ -1,7 +1,6 @@
 ## ---------------------------------------------------------- ##
 # Quality Control Survey Data - Full WG Survey 3
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Do various QC on survey data
 ## Incl. standardizing response categories across survey variants, etc.
@@ -13,8 +12,8 @@
 # Load libraries
 librarian::shelf(tidyverse, supportR)
 
-# Make needed sub-folder(s)
-dir.create(file.path("data", "tidy"), showWarnings = F, recursive = T)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()

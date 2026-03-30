@@ -1,7 +1,6 @@
 # ---------------------------------------------------------- ##
 # Graph Survey Data - Full WG (Mid)
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Make graphs for inclusion in the report for this survey
 ## Also likely useful for other LNO reports (e.g., annual report)
@@ -13,8 +12,8 @@
 # Load libraries
 librarian::shelf(tidyverse, supportR)
 
-# Make needed sub-folder(s)
-dir.create(file.path("graphs"), showWarnings = F)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()
@@ -31,7 +30,7 @@ dplyr::glimpse(mid)
 purrr::walk(.x = dir(path = "tools"), .f = ~ source(file.path("tools", .x)))
 
 # Assemble a nice file stem for graphs on this survey's data
-filestem <- "LTER_survey-02_full-wg-mid-project_"
+filestem <- "full-mid_"
 
 ## ------------------------------------- ##
 # Satisfaction Rating ----

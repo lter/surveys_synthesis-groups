@@ -1,7 +1,6 @@
 # ---------------------------------------------------------- ##
 # Graph Survey Data - Full WG (Early)
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Make graphs for inclusion in the report for this survey
 ## Also likely useful for other LNO reports (e.g., annual report)
@@ -16,8 +15,8 @@ librarian::shelf(tidyverse, supportR)
 # Make needed sub-folder(s)
 dir.create(file.path("graphs"), showWarnings = F)
 
-# Clear environment
-rm(list = ls()); gc()
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Read in the data
 early <- read.csv(file = file.path("data", "tidy", "wg-survey-tidy_full_first-meeting.csv")) %>% 
@@ -31,7 +30,7 @@ dplyr::glimpse(early)
 purrr::walk(.x = dir(path = "tools"), .f = ~ source(file.path("tools", .x)))
 
 # Assemble a nice file stem for graphs on this survey's data
-filestem <- "LTER_survey-01_full-wg-first-meeting_"
+filestem <- "full-early_"
 
 ## ------------------------------------- ##
 # Satisfaction Rating ----

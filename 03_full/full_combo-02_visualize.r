@@ -1,7 +1,6 @@
 # ---------------------------------------------------------- ##
 # Graph Survey Data - All Full WG Surveys
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Make graphs that show patterns across time *within cohort*
 
@@ -12,8 +11,8 @@
 # Load libraries
 librarian::shelf(tidyverse, supportR)
 
-# Make needed sub-folder(s)
-dir.create(file.path("graphs"), showWarnings = F)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()
@@ -38,7 +37,7 @@ dplyr::glimpse(combo)
 purrr::walk(.x = dir(path = "tools"), .f = ~ source(file.path("tools", .x)))
 
 # Assemble a nice file stem for graphs on this survey's data
-filestem <- "LTER_survey-01-to-03_full-wg-all-surveys_"
+filestem <- "full-cross-project_"
 
 ## ------------------------------------- ##
 # Satisfaction Rating ----

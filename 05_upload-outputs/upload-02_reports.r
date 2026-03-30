@@ -20,14 +20,14 @@ rm(list = ls()); gc()
 ## ------------------------------------- ##
 
 # Identify local graphs
-(local_reports <- dir(pattern = "*.pdf"))
+(local_reports <- dir(path = file.path("reports"), pattern = "*.pdf"))
 
 # Identify Drive folder where reports are uploaded
 report_drive_folder <- googledrive::as_id("https://drive.google.com/drive/u/0/folders/1IDI3xruhkmhq__uXa-p9fCwCDPSM_G9x")
 
 # Upload them to the Drive (overwriting files of the same name)
 purrr::walk(.x = local_reports,
-  .f = ~ googledrive::drive_upload(media = .x, 
+  .f = ~ googledrive::drive_upload(media = file.path("reports", .x), 
     overwrite = T, path = report_drive_folder))
 
 # End ----

@@ -1,0 +1,5 @@
+project:
+  execute-dir: project
+  output-dir: reports
+  render:
+    - "*.qmd"

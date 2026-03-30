@@ -75,6 +75,12 @@ vignettes/*.pdf
 *.html
 *.zip
 
+# Intermediary rendering files/folders
+*.aux
+*.log
+*.tex
+*_files/
+
 # Data file types
 ## Delete the hashtag (on the left in the following lines) if you _would_ like to ignore this file type
 *.csv

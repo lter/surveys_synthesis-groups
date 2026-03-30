@@ -19,5 +19,5 @@ The code in this repository anonymizes and aggregates Qualtrics survey data on s
 
 - `-setup.r` - Creates graphs needed by at least two other scripts
 - `tools/` - Centralizes some QC / visualization functions used by at least two other scripts
-- `report_\<survey-name\>.qmd`- Rendered reports for each of the surveys that include graphs produced by respective 'visualization' scripts
+- `report_<survey-name>.qmd`- Rendered reports for each of the surveys that include graphs produced by respective 'visualization' scripts
     - To save on computing, these files just embed graphs produced elsewhere, so you'll need to successfully run the respective visualization script before these report files will render

@@ -13,8 +13,8 @@
 # Load libraries
 librarian::shelf(tidyverse, supportR)
 
-# Make needed sub-folder(s)
-dir.create(file.path("graphs"), showWarnings = F)
+# Get set up
+source(file = file.path("-setup.r"))
 
 # Clear environment
 rm(list = ls()); gc()
@@ -31,7 +31,7 @@ dplyr::glimpse(demo)
 purrr::walk(.x = dir(path = "tools"), .f = ~ source(file.path("tools", .x)))
 
 # Assemble a nice file stem for graphs on this survey's data
-filestem <- "LTER_survey-00_demographics_"
+filestem <- "demographics_"
 
 ## ------------------------------------- ##
 # Gender ----

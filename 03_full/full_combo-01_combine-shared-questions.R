@@ -1,12 +1,14 @@
 ## ---------------------------------------------------------- ##
 # Combine Surveys
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Some questions are asked in multiple surveys
 ## By combining survey data, we can graph these to more explicitly identify change over time
 ### Not just across cohorts (as is done by within-survey graphs)
 ### But within them as well
+
+# !!!WARNING!!!
+## _Requires_ that you've run the "quality-control" script for ALL THREE full working group surveys!
 
 ## ------------------------------------- ##
 # Housekeeping ----

@@ -79,7 +79,7 @@ supportR::count(vec = combo_v3$survey_type)
 combo_v3 %>% 
   dplyr::select(dplyr::starts_with("attendance_")) %>% 
   tidyr::pivot_longer(cols = dplyr::starts_with("attendance_")) %>% 
-  pull(value) %>% 
+  dplyr::pull(value) %>% 
   supportR::count(vec = .)
   
 # Do needed tidying/standardization
@@ -107,7 +107,7 @@ combo_v4 <- combo_v3 %>%
 combo_v4 %>% 
   dplyr::select(dplyr::starts_with("attendance_")) %>% 
   tidyr::pivot_longer(cols = dplyr::starts_with("attendance_")) %>% 
-  pull(value) %>% 
+  dplyr::pull(value) %>% 
   supportR::count(vec = .)
 
 ## ------------------------------------- ##

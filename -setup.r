@@ -15,6 +15,7 @@ dir.create(file.path("data", "tidy"), showWarnings = F)
 
 # Other necessary folders
 dir.create(file.path("graphs"), showWarnings = F)
+dir.create(file.path("reports"), showWarnings = F)
 
 # Clear environment
 rm(list = ls()); gc()

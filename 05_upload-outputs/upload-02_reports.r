@@ -1,7 +1,6 @@
 # ---------------------------------------------------------- ##
 # Upload Reports to Google Drive
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Upload all report files to the relevant Drive folder
 ## Overwriting reports of the same name already there

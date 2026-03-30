@@ -1,7 +1,6 @@
 # ---------------------------------------------------------- ##
 # Upload Graphs to Google Drive
 ## ---------------------------------------------------------- ##
-
 # Purpose:
 ## Upload all graph files to the relevant Drive folder
 ## Overwriting graphs of the same name already there
@@ -41,8 +40,7 @@ if(update == T){
 
 # Upload them to the Drive (overwriting files of the same name)
 purrr::walk(.x = wanted_graphs,
-            .f = ~ googledrive::drive_upload(media = file.path("graphs", .x), 
-                                             overwrite = T,
-                                             path = graph_drive_folder))
+  .f = ~ googledrive::drive_upload(media = file.path("graphs", .x), 
+    overwrite = T, path = graph_drive_folder))
 
 # End ----

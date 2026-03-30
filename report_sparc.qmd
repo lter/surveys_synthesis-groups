@@ -22,7 +22,7 @@ This report reflects survey data as of **`r Sys.Date()`**; there are currently *
 
 ### How satisfied are you overall with your participation in the working group?
 
-![](graphs/LTER_survey-01B_sparc_satisfaction.png){width="90%" fig-align="center"}
+![](graphs/sparc_satisfaction.png){width="90%" fig-align="center"}
 
 \newpage
 
@@ -38,13 +38,13 @@ pull_text(df = sparc, text = "satisfaction_suggestion_text")
 
 ### Based on your experience with this working group, would you be interested in participating in a future full synthesis working group (\~3 meetings over 2 years)?
 
-![](graphs/LTER_survey-01B_sparc_future-interest-self.png){width="90%" fig-align="center"}
+![](graphs/sparc_future-interest-self.png){width="90%" fig-align="center"}
 
 \newpage
 
 ### How likely are you to encourage a colleague to participate in a future SPARC working group?
 
-![](graphs/LTER_survey-01B_sparc_future-encourage-peer.png){width="90%" fig-align="center"}
+![](graphs/sparc_future-encourage-peer.png){width="90%" fig-align="center"}
 
 \newpage
 
@@ -61,7 +61,7 @@ pull_text(df = sparc, text = "outcomes_achieved")
 
 Responses of "Great Benefit"
 
-![](graphs/LTER_survey-01B_sparc_benefits.png){width="90%" fig-align="center"}
+![](graphs/sparc_benefits.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 
@@ -81,7 +81,7 @@ Responses of "Great Benefit"
 
 ### Over the course of this ~1-year project, how much time do you estimate you have spent on the following types of activities?
 
-![](graphs/LTER_survey-01B_sparc_time-spent.png){width="90%" fig-align="center"}
+![](graphs/sparc_time-spent.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 
@@ -116,7 +116,7 @@ pull_text(df = sparc, text = "challenges_not_overcome")
 Answers of "Helped Significantly"
 
 
-![](graphs/LTER_survey-01B_sparc_support-value.png){width="90%" fig-align="center"}
+![](graphs/sparc_support-value.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 

@@ -22,7 +22,7 @@ This report reflects survey data as of **`r Sys.Date()`**; there are currently *
 
 ### How satisfied are you with your participation so far in the working group?
 
-![](graphs/LTER_survey-02_full-wg-mid-project_satisfaction.png){width="90%" fig-align="center"}
+![](graphs/full-mid_satisfaction.png){width="90%" fig-align="center"}
 
 \newpage
 
@@ -38,7 +38,7 @@ pull_text(df = mid, text = "satisfaction_suggestion_text")
 
 ### As part of the survey you completed during your first meeting, you described your expectations regarding the working group’s research products or other outcomes. To what degree have your expectations changed or evolved since that first meeting?
 
-![](graphs/LTER_survey-02_full-wg-mid-project_expectations-evolve.png){width="90%" fig-align="center"}
+![](graphs/full-mid_expectations-evolve.png){width="90%" fig-align="center"}
 
 \newpage
 
@@ -55,7 +55,7 @@ pull_text(df = mid, text = "expectations_evolve_text")
 
 Responses of "Great Benefit"
 
-![](graphs/LTER_survey-02_full-wg-mid-project_benefits.png){width="90%" fig-align="center"}
+![](graphs/full-mid_benefits.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 

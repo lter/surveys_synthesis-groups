@@ -22,7 +22,7 @@ This report reflects survey data as of **`r Sys.Date()`**; there are currently *
 
 ### How satisfied are you with your participation so far in the working group?
 
-![](graphs/LTER_survey-01_full-wg-first-meeting_satisfaction.png){width="90%" fig-align="center"}
+![](graphs/full-early_satisfaction.png){width="90%" fig-align="center"}
 
 \newpage
 
@@ -49,7 +49,7 @@ pull_text(df = early, text = "unique_skills_text")
 
 Responses of "Extremely Important"
 
-![](graphs/LTER_survey-01_full-wg-first-meeting_benefits.png){width="90%" fig-align="center"}
+![](graphs/full-early_benefits.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 
@@ -78,7 +78,7 @@ pull_text(df = early, text = "benefits_other_text")
 
 Response of "Very Serious Challenge" and "Serious Challenge"
 
-![](graphs/LTER_survey-01_full-wg-first-meeting_challenges.png){width="90%" fig-align="center"}
+![](graphs/full-early_challenges.png){width="90%" fig-align="center"}
 
 > Un-Abbreviated Axis Explanation
 
